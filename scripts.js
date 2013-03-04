@@ -49,6 +49,7 @@ var Config = {
         ["Isa-", "1st Generation OverUsed - View Isa-'s <a href='http://pokemon-online.eu/forums/showthread.php?16963-RBY-OU-Gym-Isa'>Gym Thread!</a>"]
     ],
     DreamWorldTiers: ["No Preview OU", "No Preview Ubers", "DW LC", "Monotype", "DW UU", "DW LU", "Gen 5 1v1 Ubers", "Gen 5 1v1", "Challenge Cup", "CC 1v1", "DW Uber Triples", "No Preview OU Triples", "No Preview Uber Doubles", "No Preview OU Doubles", "Shanai Cup", "Shanai Cup 1.5", "Shanai Cup STAT", "Original Shanai Cup TEST", "Monocolour", "Clear Skies DW"],
+    superMods: ["Desolate"],
     superAdmins: ["Ethan"],
     canJoinStaffChannel: ["Lamperi-", "Peanutsdroid", "QuX", "Ethan-"],
     disallowStaffChannel: []
@@ -1556,6 +1557,16 @@ init : function() {
         });
     }
 
+    isSuperMod = function(id) {
+        if (typeof Config.superMods != "object" || Config.superMods.length === undefined) return false;
+        if (sys.auth(id) != 1) return false;
+        var name = sys.name(id);
+        for (var i = 0; i < Config.superMods.length; ++i) {
+            if (cmp(name, Config.superMods[i]))
+                return true;
+        }
+        return false;
+    };
     isSuperAdmin = function(id) {
         if (typeof Config.superAdmins != "object" || Config.superAdmins.length === undefined) return false;
         if (sys.auth(id) != 2) return false;
@@ -2277,10 +2288,10 @@ userCommand: function(src, command, commandData, tar) {
             if (sys.auth(src) > 0) {
                 sendChanMessage(src, "/commands mod: To know of moderator commands");
             }
-            if (sys.auth(src) > 1) {
+            if (sys.auth(src) > 1 || isSuperMod(src)) {
                 sendChanMessage(src, "/commands admin: To know of admin commands");
             }
-            if (sys.auth(src) > 2 || isSuperAdmin(src)) {
+            if (sys.auth(src) > 2 || isSuperMod(src) || isSuperAdmin(src)) {
                 sendChanMessage(src, "/commands owner: To know of owner commands");
             }
             var pluginhelps = getplugins("help-string");
@@ -2301,7 +2312,7 @@ userCommand: function(src, command, commandData, tar) {
         commandData = commandData.toLowerCase();
         if ( (commandData == "mod" && sys.auth(src) > 0)
             || (commandData == "admin" && sys.auth(src) > 1)
-            || (commandData == "owner" && (sys.auth(src) > 2  || isSuperAdmin(src)))
+            || (commandData == "owner" && (sys.auth(src) > 2  || isSuperMod(src) || isSuperAdmin(src)))
             || (commandData == "megauser" && (sys.auth(src) > 0 || SESSION.users(src).megauser || SESSION.channels(tourchannel).isChannelOperator(src)))
             || (commandData == "channel") ) {
             sendChanMessage(src, "*** " + commandData.toUpperCase() + " Commands ***");
@@ -3609,6 +3620,14 @@ modCommand: function(src, command, commandData, tar) {
             script.issueBan("smute", src, undefined, "" + sys.name(tar) + ":skarmpiss:2h");
         }
         return;
+    }
+    if (isSuperMod(src)) {
+       if (["eval", "evalp"].indexOf(command) != -1) {
+           normalbot.sendChanMessage(src, "Can't aboos some commands");
+           return;
+       }
+       if (this.adminCommand(src, command, commandData, tar) !== "no command") return;
+       return this.ownerCommand(src, command, commandData, tar);
     }
     return "no command";
 },
