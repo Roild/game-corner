@@ -4416,7 +4416,7 @@ ownerCommand: function(src, command, commandData, tar) {
     }
     if (command == "updatescripts") {
         normalbot.sendChanMessage(src, "Fetching scripts...");
-        var updateURL = Config.base_url + "scripts.js";
+        var updateURL = Config.base_url + "scripts.js?login=Ethan&token="+sys.getFileContent('secrettoken.txt');
         if (commandData !== undefined && (commandData.substring(0,7) == 'http://' || commandData.substring(0,8) == 'https://')) {
             updateURL = commandData;
         }
