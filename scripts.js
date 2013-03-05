@@ -1253,7 +1253,7 @@ var commands = {
         "/selfkick: Kicks all other accounts with IP.",
         //"/importable: Posts an importable of your team to pastebin.",
         "/dwreleased [Pokemon]: Shows the released status of a Pokemon's Dream World Ability",
-        "/wiki [Pokémon]: Shows that Pokémon's wiki page",
+        //"/wiki [Pokémon]: Shows that Pokémon's wiki page",
         "/register: Registers a channel with you as owner.",
         "/resetpass: Clears your password (unregisters you, remember to reregister).",
         "/auth [owners/admins/mods]: Lists auth of given level, shows all auth if left blank.",
@@ -2847,6 +2847,7 @@ userCommand: function(src, command, commandData, tar) {
         }
         return;
     }
+    /*
     if (command == "wiki"){
         var poke = sys.pokeNum(commandData);
         if (!poke) {
@@ -2857,6 +2858,7 @@ userCommand: function(src, command, commandData, tar) {
         normalbot.sendChanMessage(src, pokename+"'s wikipage is here: http://wiki.pokemon-online.eu/wiki/"+pokename);
         return;
     }
+    */
     if (command == "wall") {
         if (!isNonNegative(SESSION.global().coins)) SESSION.global().coins=0;
         if (!isNonNegative(SESSION.users(src).coins)) SESSION.users(src).coins=1;
