@@ -167,7 +167,9 @@ function sendBotAll(message, chan, html) {
         }
         else if (chan === "~mt") {
             sendChanHtmlAll("<font color="+tourconfig.tourbotcolour+"><timestamp/><b>"+tourconfig.tourbot+"</b></font>"+message,tourschan);
-            sendChanHtmlAll("<font color="+tourconfig.tourbotcolour+"><timestamp/><b>"+tourconfig.tourbot+"</b></font>"+message,0);
+            if (tourschan !== 0) {
+                sendChanHtmlAll("<font color="+tourconfig.tourbotcolour+"><timestamp/><b>"+tourconfig.tourbot+"</b></font>"+message,0);
+            }
         }
         else if (chan === "~st") {
             sendChanHtmlAll("<font color="+tourconfig.tourbotcolour+"><timestamp/><b>"+tourconfig.tourbot+"</b></font>"+message,tourschan);
@@ -184,7 +186,9 @@ function sendBotAll(message, chan, html) {
         }
         else if (chan === "~mt") {
             sendChanHtmlAll("<font color="+tourconfig.tourbotcolour+"><timestamp/><b>"+tourconfig.tourbot+"</b></font>"+html_escape(message),tourschan);
-            sendChanHtmlAll("<font color="+tourconfig.tourbotcolour+"><timestamp/><b>"+tourconfig.tourbot+"</b></font>"+html_escape(message),0);
+            if (tourschan !== 0) {
+                sendChanHtmlAll("<font color="+tourconfig.tourbotcolour+"><timestamp/><b>"+tourconfig.tourbot+"</b></font>"+html_escape(message),0);
+            }
         }
         else if (chan === "~st") {
             sendChanHtmlAll("<font color="+tourconfig.tourbotcolour+"><timestamp/><b>"+tourconfig.tourbot+"</b></font>"+html_escape(message),tourschan);
@@ -303,6 +307,57 @@ function addTourActivity(src) {
     if (tours.activetas.indexOf(sys.name(src).toLowerCase()) == -1) {
         tours.activetas.push(sys.name(src).toLowerCase());
     }
+}
+
+// Tournament rules
+function showRules(src, commandData, channel) {
+    sys.sendMessage(src, border,channel);
+    for (var t in tourrules) {
+        sys.sendMessage(src, tourrules[t],channel);
+    }
+    sys.sendMessage(src, border,channel);
+    return true;
+}
+
+// Tournament commands
+function showHelp(src, type, channel) {
+    var headersent = false;
+    var sendHeader = function () {
+        if (!headersent) {
+            sys.sendMessage(src, border, channel);
+            sys.sendMessage(src, "*** Tournament Commands ***", channel);
+            headersent = true;
+        }
+    };
+    if (type === "tournaments" || type == "tournament") {
+        sendHeader();
+        for (var t in tourcommands) {
+            sys.sendMessage(src, tourcommands[t], channel);
+        }
+        sys.sendMessage(src, border, channel);
+    }
+    if (isTourAdmin(src) && (type == "megauser" || type === "tournaments")) {
+        sendHeader();
+        for (var m in tourmodcommands) {
+            sys.sendMessage(src, tourmodcommands[m], channel);
+        }
+        sys.sendMessage(src, border, channel);
+    }
+    if (isTourSuperAdmin(src) && (type == "tadmin" || type === "tournaments")) {
+        sendHeader();
+        for (var a in touradmincommands) {
+            sys.sendMessage(src, touradmincommands[a], channel);
+        }
+        sys.sendMessage(src, border, channel);
+    }
+    if (isTourOwner(src) && (type == "towner" || type === "tournaments")) {
+        sendHeader();
+        for (var o in tourownercommands) {
+            sys.sendMessage(src, tourownercommands[o], channel);
+        }
+        sys.sendMessage(src, border, channel);
+    }
+    if (headersent) return true;
 }
 
 // Will escape "&", ">", and "<" symbols for HTML output.
@@ -3085,53 +3140,12 @@ function tourCommand(src, command, commandData) {
             }
             return true;
         }
-        if (command == "help" || command == "commands") {
+        if (command == "help") {
             var type = commandData.toLowerCase();
-            var headersent = false;
-            var sendHeader = function() {
-                if (!headersent) {
-                    sys.sendMessage(src, border,tourschan);
-                    sys.sendMessage(src, "*** Tournament Commands ***",tourschan);
-                    headersent = true;
-                }
-            };
-            if (type === "" || type == "tournament") {
-                sendHeader();
-                for (var t in tourcommands) {
-                    sys.sendMessage(src, tourcommands[t],tourschan);
-                }
-                sys.sendMessage(src, border,tourschan);
-            }
-            if (isTourAdmin(src) && (type == "mod" || type == "megauser" || type === "")) {
-                sendHeader();
-                for (var m in tourmodcommands) {
-                    sys.sendMessage(src, tourmodcommands[m],tourschan);
-                }
-                sys.sendMessage(src, border,tourschan);
-            }
-            if (isTourSuperAdmin(src) && (type == "admin" || type === "")) {
-                sendHeader();
-                for (var a in touradmincommands) {
-                    sys.sendMessage(src, touradmincommands[a],tourschan);
-                }
-                sys.sendMessage(src, border,tourschan);
-            }
-            if (isTourOwner(src) && (type == "owner" || type === "")) {
-                sendHeader();
-                for (var o in tourownercommands) {
-                    sys.sendMessage(src, tourownercommands[o],tourschan);
-                }
-                sys.sendMessage(src, border,tourschan);
-            }
-            if (headersent) return true;
+            return showHelp(src, type, channel);
         }
-        if (command == "rules" || command == "tourrules") {
-            sys.sendMessage(src, border,tourschan);
-            for (var t in tourrules) {
-                sys.sendMessage(src, tourrules[t],tourschan);
-            }
-            sys.sendMessage(src, border,tourschan);
-            return true;
+        if (command == "tourrules") {
+            return showRules(src, commandData, channel);
         }
         if (command == "leaderboard") {
             tstats.rankings(src, commandData, false, "all");
@@ -4968,5 +4982,13 @@ module.exports = {
             }
         }
         return false;
+    },
+    onHelp : function(src, topic, channel) {
+        if (channel === tourschan && ["tournaments", "tournaments", "megauser", "tadmin", "towner"].indexOf(topic) !== -1) {
+            showHelp(src, topic, channel);
+        }
+    },
+    showRules : function(src, commandData, channel) {
+        showRules(src, commandData, channel);
     }
 };

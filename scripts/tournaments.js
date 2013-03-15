@@ -1212,6 +1212,9 @@ module.exports = {
 
 	onHelp: function(src, topic, channel) {
 		var help = [];
+        if (module.tournaments[channel] === undefined) {
+            return false;
+        }
 		if (topic == "tournaments") {
 			help = [
 				"/join: Enters you to in a tournament.",

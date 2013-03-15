@@ -2399,6 +2399,10 @@ userCommand: function(src, command, commandData, tar) {
             require('mafia.js').showRules(src, commandData, channel);
             return;
         }
+        if (commandData === "tournaments" || commandData === "tours") {
+            require('tours.js').showRules(src, commandData, channel);
+            return;
+        }
         var norules = (rules.length-1)/2; //formula for getting the right amount of rules
         if(commandData !== undefined && !isNaN(commandData) && commandData >0 && commandData < norules){
             var num = parseInt(commandData, 10);
