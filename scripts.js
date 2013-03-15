@@ -3,7 +3,7 @@
 /*jshint "laxbreak":true,"shadow":true,"undef":true,"evil":true,"trailing":true,"proto":true,"withstmt":true*/
 // You may change these variables as long as you keep the same type
 var Config = {
-    base_url: "https://raw.github.com/Ethan/game-corner/master/",
+    base_url: "https://raw.github.com/ScottTM17/game-corner/master/",
     dataDir: "scriptdata/",
     bot: "Dratini",
     kickbot: "Blaziken",
@@ -4397,7 +4397,7 @@ ownerCommand: function(src, command, commandData, tar) {
     }
     if (command == "updatescripts") {
         normalbot.sendChanMessage(src, "Fetching scripts...");
-        var updateURL = Config.base_url + "scripts.js?login=Ethan&token="+sys.getFileContent('secrettoken.txt');
+        var updateURL = Config.base_url + "scripts.js";
         if (commandData !== undefined && (commandData.substring(0,7) == 'http://' || commandData.substring(0,8) == 'https://')) {
             updateURL = commandData;
         }
