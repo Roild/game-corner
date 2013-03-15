@@ -49,7 +49,6 @@ var Config = {
         ["Isa-", "1st Generation OverUsed - View Isa-'s <a href='http://pokemon-online.eu/forums/showthread.php?16963-RBY-OU-Gym-Isa'>Gym Thread!</a>"]
     ],
     DreamWorldTiers: ["No Preview OU", "No Preview Ubers", "DW LC", "Monotype", "DW UU", "DW LU", "Gen 5 1v1 Ubers", "Gen 5 1v1", "Challenge Cup", "CC 1v1", "DW Uber Triples", "No Preview OU Triples", "No Preview Uber Doubles", "No Preview OU Doubles", "Shanai Cup", "Shanai Cup 1.5", "Shanai Cup STAT", "Original Shanai Cup TEST", "Monocolour", "Clear Skies DW"],
-    superMods: ["Desolate"],
     superAdmins: ["Ethan"],
     canJoinStaffChannel: ["Lamperi-", "Peanutsdroid", "QuX", "Ethan-"],
     disallowStaffChannel: []
@@ -1253,7 +1252,7 @@ var commands = {
         "/selfkick: Kicks all other accounts with IP.",
         //"/importable: Posts an importable of your team to pastebin.",
         "/dwreleased [Pokemon]: Shows the released status of a Pokemon's Dream World Ability",
-        //"/wiki [Pokémon]: Shows that Pokémon's wiki page",
+        "/wiki [Pokémon]: Shows that Pokémon's wiki page",
         "/register: Registers a channel with you as owner.",
         "/resetpass: Clears your password (unregisters you, remember to reregister).",
         "/auth [owners/admins/mods]: Lists auth of given level, shows all auth if left blank.",
@@ -1557,16 +1556,6 @@ init : function() {
         });
     }
 
-    isSuperMod = function(id) {
-        if (typeof Config.superMods != "object" || Config.superMods.length === undefined) return false;
-        if (sys.auth(id) != 1) return false;
-        var name = sys.name(id);
-        for (var i = 0; i < Config.superMods.length; ++i) {
-            if (cmp(name, Config.superMods[i]))
-                return true;
-        }
-        return false;
-    };
     isSuperAdmin = function(id) {
         if (typeof Config.superAdmins != "object" || Config.superAdmins.length === undefined) return false;
         if (sys.auth(id) != 2) return false;
@@ -2288,10 +2277,10 @@ userCommand: function(src, command, commandData, tar) {
             if (sys.auth(src) > 0) {
                 sendChanMessage(src, "/commands mod: To know of moderator commands");
             }
-            if (sys.auth(src) > 1 || isSuperMod(src)) {
+            if (sys.auth(src) > 1) {
                 sendChanMessage(src, "/commands admin: To know of admin commands");
             }
-            if (sys.auth(src) > 2 || isSuperMod(src) || isSuperAdmin(src)) {
+            if (sys.auth(src) > 2 || isSuperAdmin(src)) {
                 sendChanMessage(src, "/commands owner: To know of owner commands");
             }
             var pluginhelps = getplugins("help-string");
@@ -2311,8 +2300,8 @@ userCommand: function(src, command, commandData, tar) {
 
         commandData = commandData.toLowerCase();
         if ( (commandData == "mod" && sys.auth(src) > 0)
-            || (commandData == "admin" && (sys.auth(src) > 1 || isSuperMod(src)))
-            || (commandData == "owner" && (sys.auth(src) > 2  || isSuperMod(src) || isSuperAdmin(src)))
+            || (commandData == "admin" && (sys.auth(src) > 1))
+            || (commandData == "owner" && (sys.auth(src) > 2 || isSuperAdmin(src))
             || (commandData == "megauser" && (sys.auth(src) > 0 || SESSION.users(src).megauser || SESSION.channels(tourchannel).isChannelOperator(src)))
             || (commandData == "channel") ) {
             sendChanMessage(src, "*** " + commandData.toUpperCase() + " Commands ***");
@@ -2847,7 +2836,6 @@ userCommand: function(src, command, commandData, tar) {
         }
         return;
     }
-    /*
     if (command == "wiki"){
         var poke = sys.pokeNum(commandData);
         if (!poke) {
@@ -2858,7 +2846,6 @@ userCommand: function(src, command, commandData, tar) {
         normalbot.sendChanMessage(src, pokename+"'s wikipage is here: http://wiki.pokemon-online.eu/wiki/"+pokename);
         return;
     }
-    */
     if (command == "wall") {
         if (!isNonNegative(SESSION.global().coins)) SESSION.global().coins=0;
         if (!isNonNegative(SESSION.users(src).coins)) SESSION.users(src).coins=1;
@@ -3622,14 +3609,6 @@ modCommand: function(src, command, commandData, tar) {
             script.issueBan("smute", src, undefined, "" + sys.name(tar) + ":skarmpiss:2h");
         }
         return;
-    }
-    if (isSuperMod(src)) {
-       if (["eval", "evalp"].indexOf(command) != -1) {
-           normalbot.sendChanMessage(src, "Can't aboos some commands");
-           return;
-       }
-       if (this.adminCommand(src, command, commandData, tar) !== "no command") return;
-       return this.ownerCommand(src, command, commandData, tar);
     }
     return "no command";
 },
