@@ -1515,7 +1515,7 @@ init : function() {
     "8. Do not post pornographic, vulgar, or obscene images, and do not have similar chats. Do not post ASCII art.",
     "9. Do not attempt to circumvent the rules, create loopholes, or pretend that you did not break the rules when you obviously have. This will result in a harsher punishment.",
     "",
-    "These rules in other languages can be found here: http://gamecorner.info/Thread-Server-Rules?pid=879#pid879"
+    "These rules are available in other languages here: http://gamecorner.info/Thread-Server-Rules?pid=879#pid879"
     ];
 
     if (typeof authStats == 'undefined')
