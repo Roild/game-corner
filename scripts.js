@@ -2301,7 +2301,7 @@ userCommand: function(src, command, commandData, tar) {
         commandData = commandData.toLowerCase();
         if ( (commandData == "mod" && sys.auth(src) > 0)
             || (commandData == "admin" && (sys.auth(src) > 1))
-            || (commandData == "owner" && (sys.auth(src) > 2 || isSuperAdmin(src))
+            || (commandData == "owner" && (sys.auth(src) > 2 || isSuperAdmin(src)))
             || (commandData == "megauser" && (sys.auth(src) > 0 || SESSION.users(src).megauser || SESSION.channels(tourchannel).isChannelOperator(src)))
             || (commandData == "channel") ) {
             sendChanMessage(src, "*** " + commandData.toUpperCase() + " Commands ***");
