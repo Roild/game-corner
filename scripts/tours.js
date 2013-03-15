@@ -4984,7 +4984,7 @@ module.exports = {
         return false;
     },
     onHelp : function(src, topic, channel) {
-        if (channel === tourschan && ["tournaments", "tournaments", "megauser", "tadmin", "towner"].indexOf(topic) !== -1) {
+        if (["tournaments", "tournaments", "megauser", "tadmin", "towner"].indexOf(topic) !== -1) {
             showHelp(src, topic, channel);
         }
     },

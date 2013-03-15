@@ -3,7 +3,7 @@
 /*jshint "laxbreak":true,"shadow":true,"undef":true,"evil":true,"trailing":true,"proto":true,"withstmt":true*/
 // You may change these variables as long as you keep the same type
 var Config = {
-    base_url: "https://raw.github.com/ScottTM17/game-corner/master/",
+    base_url: "https://raw.github.com/CrystalMoogle/game-corner/Patch-1/",
     dataDir: "scriptdata/",
     bot: "Dratini",
     kickbot: "Blaziken",
@@ -2302,7 +2302,6 @@ userCommand: function(src, command, commandData, tar) {
         if ( (commandData == "mod" && sys.auth(src) > 0)
             || (commandData == "admin" && (sys.auth(src) > 1))
             || (commandData == "owner" && (sys.auth(src) > 2 || isSuperAdmin(src)))
-            || (commandData == "megauser" && (sys.auth(src) > 0 || SESSION.users(src).megauser || SESSION.channels(tourchannel).isChannelOperator(src)))
             || (commandData == "channel") ) {
             sendChanMessage(src, "*** " + commandData.toUpperCase() + " Commands ***");
             commands[commandData].forEach(function(help) {
