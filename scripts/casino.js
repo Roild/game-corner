@@ -7,7 +7,7 @@ module.exports = function () {
     var defaultMaster = "BeastCharizard";
     var defaultChannel = "Casino";
   
-	var coins;
+	var coins = 100;
 	var payout;
 	var caldice;
 	var crapsdice;
@@ -20,7 +20,6 @@ module.exports = function () {
 	var dice3;
 	var slot;
 	var jackpot = 1000;
-	
 	
 	
 	this.playCAL = function(src, commandData){
@@ -47,29 +46,29 @@ module.exports = function () {
         dice3 = Math.floor((Math.random()*6)+1);
         coins[sys.name(src)] -= bet;
         caldice = dice1 + dice2 + dice3;
-        if(caldice === calnumber){
-            if(calnumber === 3 || calnumber === 18){
+        if(caldice == calnumber){
+            if(calnumber == 3 || calnumber == 18){
                 payout = bet*8;
             }
-            else if(calnumber === 4 || calnumber === 17){
+            else if(calnumber == 4 || calnumber == 17){
                 payout = bet*7;
             }
-            else if(calnumber === 5 || calnumber === 16){
+            else if(calnumber == 5 || calnumber == 16){
                 payout = bet*6;
             }
-            else if(calnumber === 6 || calnumber === 15){
+            else if(calnumber == 6 || calnumber == 15){
                 payout = bet*5;
             }
-            else if(calnumber === 7 || calnumber === 14){
+            else if(calnumber == 7 || calnumber == 14){
                 payout = bet*4;
             }
-            else if(calnumber === 8 || calnumber === 13){
+            else if(calnumber == 8 || calnumber == 13){
                 payout = bet*3;
             }
-            else if(calnumber === 9 || calnumber === 12){
+            else if(calnumber == 9 || calnumber == 12){
                 payout = bet*2;
             }
-            else if(calnumber === 10 || calnumber === 11){
+            else if(calnumber == 10 || calnumber == 11){
                 payout = bet*1;
             }
             casinobot.sendMessage(src, "You rolled a " +caldice+" and matched your number!! You get " + payout+ " coins!", casinochan);
@@ -93,7 +92,7 @@ module.exports = function () {
             dice3 = undefined;
             return;
         }
-        if(coins[sys.name(src)] <= 0 || coins[sys.name(src)] = undefined){
+        if(coins[sys.name(src)] <= 0 || coins[sys.name(src)] == undefined){
             coins[sys.name(src)] += 100;
         }
 	};
@@ -141,7 +140,7 @@ this.playCraps = function (src, commandData){
 		dice1 = undefined;
 		dice2 = undefined;
 		crapsdice = undefined;
-		if(coins[sys.name(src)] <= 0 || coins[sys.name(src)] = undefined){
+		if(coins[sys.name(src)] <= 0 || coins[sys.name(src)] == undefined){
 			coins[sys.name(src)] += 100;
 		}
 		};
@@ -196,7 +195,7 @@ this.playCraps = function (src, commandData){
 			return;
 		}
 		slot = undefined;
-		if(coins[sys.name(src)] <= 0 || coins[sys.name(src)] = undefined){
+		if(coins[sys.name(src)] <= 0 || coins[sys.name(src)] == undefined){
 			coins[sys.name(src)] += 100;
 		}
 	};
