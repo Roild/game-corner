@@ -159,31 +159,31 @@ this.playCraps = function (src, commandData){
 			jackpot = 1000;
 			return;
 		}
-		else if(2<= slot <= 8){
+		if(2<= slot <= 8){
 			coins[sys.name(src)] += 200;
-			casinobot.sendMessage(src, "You hit a great number and got 200 coins!!!" + slot, casinochan);
+			casinobot.sendMessage(src, "You hit a great number and got 200 coins!!!", casinochan);
 			jackpot += 1;
 			return;
 		}
-		else if(9<= slot <= 18){
+		if(9<= slot <= 18){
 			coins[sys.name(src)] += 150;
 			casinobot.sendMessage(src, "You hit a good number and got 150 coins!!", casinochan);
 			jackpot += 1;
 			return;
 		}
-		else if(19 <= slot <= 35){
+		if(19 <= slot <= 35){
 			coins[sys.name(src)] += 100;
 			casinobot.sendMessage(src, "You hit an okay number and got 100 coins!", casinochan);
 			jackpot += 1;
 			return;
 		}
-		else if(36 <= slot <= 75){
+		if(36 <= slot <= 75){
 			coins[sys.name(src)] += 50;
 			casinobot.sendMessage(src, "Your got lucky and won 50 coins.", casinochan);
 			jackpot += 1;
 			return;
 		}
-		else if(76 <= slot <= 125){
+		if(76 <= slot <= 125){
 			coins[sys.name(src)] += 2;
 			casinobot.sendMessage(src, "You got 2 coins.  It is better than nothing.", casinochan);
 			jackpot += 1;
@@ -206,7 +206,7 @@ this.showGames = function (){
 		"+Dealer: Slots - Press your luck with this game.  You better hope your lucky number comes up."
     ];
     for (var i in games) {
-        casinobot.sendMessage(src, games[i]);
+        casinobot.sendMessage(src, games[i], casinochan);
     }
 };
 this.showmyCoins = function (src){
@@ -263,7 +263,7 @@ this.showHelp = function (commandData){
         user: {
             cal: [this.playCAL, "To play Chuck A Luck. Used like /cal bet:number"],
             craps: [this.playCraps, "To play Craps. Used like /craps bet"],
-			slots: [this.playSlots, "To play the slots. Used like /slots"],
+	    slots: [this.playSlots, "To play the slots. Used like /slots"],
             help: [this.showHelp, "To learn how to play the games."],
             games: [this.showGames, "To see all the games you can play."],
             mycoins: [this.showmyCoins, "To find out how many coins you have."],
