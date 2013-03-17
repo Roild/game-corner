@@ -1231,7 +1231,7 @@ normalbot = bot = new Bot(Config.bot);
 mafiabot = new Bot(Config.Mafia.bot);
 channelbot = new Bot(Config.channelbot);
 kickbot = new Bot(Config.kickbot);
-casionbot = new Bot(Config.casinobot);
+casinobot = new Bot(Config.casinobot);
 capsbot = new Bot(Config.capsbot);
 checkbot = new Bot(Config.checkbot);
 coinbot = new Bot(Config.coinbot);
