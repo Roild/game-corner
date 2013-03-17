@@ -7,7 +7,7 @@ module.exports = function () {
     var defaultMaster = "BeastCharizard";
     var defaultChannel = "Casino";
   
-	var coins = 100;
+	var coins;
 	var payout;
 	var caldice;
 	var crapsdice;
@@ -20,6 +20,7 @@ module.exports = function () {
 	var dice3;
 	var slot;
 	var jackpot = 1000;
+	coins[sys.name(src)] = 100;
 	
 	
 	this.playCAL = function(src, commandData){
