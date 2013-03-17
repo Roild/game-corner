@@ -2,7 +2,7 @@
 /*global sys:true, sendChanHtmlAll:true, module:true, SESSION:true, casinochan, casinobot, script */
 module.exports = function () {
     var casino = this;
-    var casinochan = "Casino";
+    var casinochan;
 
     var defaultMaster = "BeastCharizard";
     var defaultChannel = "Casino";
