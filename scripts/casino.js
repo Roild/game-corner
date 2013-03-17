@@ -20,7 +20,7 @@ module.exports = function () {
 	var dice3;
 	var slot;
 	var jackpot = 1000;
-	coins[sys.name(src)] = 100;
+	
 	
 	
 	this.playCAL = function(src, commandData){
@@ -93,7 +93,7 @@ module.exports = function () {
             dice3 = undefined;
             return;
         }
-        if(coins[sys.name(src)] <= 0){
+        if(coins[sys.name(src)] <= 0 || coins[sys.name(src)] = undefined){
             coins[sys.name(src)] += 100;
         }
 	};
@@ -141,7 +141,7 @@ this.playCraps = function (src, commandData){
 		dice1 = undefined;
 		dice2 = undefined;
 		crapsdice = undefined;
-		if(coins[sys.name(src)] <= 0){
+		if(coins[sys.name(src)] <= 0 || coins[sys.name(src)] = undefined){
 			coins[sys.name(src)] += 100;
 		}
 		};
@@ -196,7 +196,7 @@ this.playCraps = function (src, commandData){
 			return;
 		}
 		slot = undefined;
-		if(coins[sys.name(src)] <= 0){
+		if(coins[sys.name(src)] <= 0 || coins[sys.name(src)] = undefined){
 			coins[sys.name(src)] += 100;
 		}
 	};
