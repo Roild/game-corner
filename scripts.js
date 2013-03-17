@@ -1503,20 +1503,19 @@ init : function() {
     else sys.webCall(Config.base_url + PROXY_FILE, addProxybans);
 
     rules = [ "",
-    "*** Pokémon Online Server Rules ***",
+    "*** Game Corner Server Rules ***",
     "",
-    "1. Pokemon Online is an international server:",
-    "- Respect other peoples' cultures and do not demand they speak English. Everyone is welcome at Pokemon Online, as long as they follow the rules.",
-    "2. No advertising, excessive messages, inappropriate/obscene links, or text art:",
-    "- Do not post links unless they are to notable sites (Youtube, Smogon, Serebii, etc). We are not interested in your start-up community. Do not monopolize the chat with large amounts of messages, or short ones in rapid succession. Posting ASCII art is punishable with a ban, as is posting anything with any type of pornography.",
-    "3. Use Find Battle, or join tournaments instead of asking in the main chat:",
-    "- The official channels on Pokemon Online have too much activity to allow battle requests in the chat. Use Find Battle or go join the tournaments channel and participate. The only exception is if you are unable to find a battle for a low-played tier, then asking once every 5 minutes or so is acceptable.",
-    "4. Do not ask for authority:",
-    "- By asking, you may have eliminated your chances of becoming one in the future. If you are genuinely interested in becoming a staff member then a good way to get noticed is to become an active member of the community. Engaging others in intelligent chats and offering to help with graphics, programming, the wiki, or our YouTube channel (among others) is a good way to get noticed.",
-    "5. No trolling, flaming, or harassing other players. Do not complain about hax in the chat, beyond a one line comment:",
-    "- Inciting responses with inflammatory comments, using verbal abuse against other players, or spamming them via chat/PM/challenges will not be tolerated. Harassing other players by constantly aggravating them or revealing personal information will be severely punished. A one line comment regarding hax after a loss to vent is fine, but excessive bemoaning is not acceptable. Excessive vulgarity will not be tolerated",
-    "6. Do not attempt to circumvent the rules:",
-    "- Ignorance of the rules is not a valid reason for breaking them. Do not attempt to find or create any loopholes in these rules, or try to adapt them in order to have a punishment overturned or to justify your actions. Doing so may incur a further punishment. Make valid appeals directly to the authority of the server."
+    "1. We are a growing community that splintered off from PO. Please do not take nicks of existing PO users - even if it is a joke or they are your friends. We would also appreciate it if you restricted the number of alts you have and how often you switch.",
+    "2. Please speak English in the main chat. You are welcome to form a private channel for other languages.",
+    "3. Do not advertise. We know the difference between linking a video you think is funny and actual advertising. Advertising private channels is also prohibited.",
+    "4. Do not spam caps or flood the chat with many multiple messages at once. Do not ask for battles in the main chat. Exceptions to the latter include people who are battling in a rarer tier, such as past generations or obscure side tiers.",
+    "5. Do not troll, insult, or deliberately act in a way that makes the chat negative.",
+    "6. Do not ask for any form of authority. Work your way into the community and impress us. Authority will be given solely on merit.",
+    "7. Do not reveal personal information about a user without their explicit permission. This rule is enforced in private channels, public channels, forum posts, and any type of personal message.",
+    "8. Do not post pornographic, vulgar, or obscene images, and do not have similar chats. Do not post ASCII art.",
+    "9. Do not attempt to circumvent the rules, create loopholes, or pretend that you did not break the rules when you obviously have. This will result in a harsher punishment.",
+    "",
+    "These rules are available in other languages here: http://gamecorner.info/Thread-Server-Rules?pid=879#pid879"
     ];
 
     if (typeof authStats == 'undefined')
@@ -2301,8 +2300,7 @@ userCommand: function(src, command, commandData, tar) {
         commandData = commandData.toLowerCase();
         if ( (commandData == "mod" && sys.auth(src) > 0)
             || (commandData == "admin" && (sys.auth(src) > 1))
-            || (commandData == "owner" && (sys.auth(src) > 2 || isSuperAdmin(src))
-            || (commandData == "megauser" && (sys.auth(src) > 0 || SESSION.users(src).megauser || SESSION.channels(tourchannel).isChannelOperator(src)))
+            || (commandData == "owner" && (sys.auth(src) > 2 || isSuperAdmin(src)))
             || (commandData == "channel") ) {
             sendChanMessage(src, "*** " + commandData.toUpperCase() + " Commands ***");
             commands[commandData].forEach(function(help) {
@@ -2399,10 +2397,13 @@ userCommand: function(src, command, commandData, tar) {
             require('mafia.js').showRules(src, commandData, channel);
             return;
         }
-        var norules = (rules.length-1)/2; //formula for getting the right amount of rules
+        if (commandData === "tournaments" || commandData === "tours") {
+            require('tours.js').showRules(src, commandData, channel);
+            return;
+        }
+        var norules = rules.length-1; //formula for getting the right amount of rules
         if(commandData !== undefined && !isNaN(commandData) && commandData >0 && commandData < norules){
             var num = parseInt(commandData, 10);
-            num = (2*num)+1; //gets the right rule from the list since it isn't simply y=x it's y=2x+1
             sendChanMessage(src, rules[num]);
             sendChanMessage(src, rules[num+1]);
             return;
@@ -2725,11 +2726,11 @@ userCommand: function(src, command, commandData, tar) {
         return;
     }
     if (command == "steal") {
-        if (tar == undefined) {
+        if (tar === undefined) {
             coinbot.sendChanMessage(src, "Choose a valid target!");
             return;
         }
-        if (SESSION.users(tar).coins == 0) {
+        if (SESSION.users(tar).coins === 0) {
         coinbot.sendChanMessage(src, "Your target does not have any coins!");
         return;
         }
@@ -2849,7 +2850,7 @@ userCommand: function(src, command, commandData, tar) {
     if (command == "wall") {
         if (!isNonNegative(SESSION.global().coins)) SESSION.global().coins=0;
         if (!isNonNegative(SESSION.users(src).coins)) SESSION.users(src).coins=1;
-        if (SESSION.global().coins == 0) return;
+        if (SESSION.global().coins === 0) return;
         coinbot.sendChanAll("" + sys.name(src) + " found " + SESSION.global().coins + " coins besides the wall!");
         SESSION.users(src).coins += SESSION.global().coins;
         SESSION.global().coins = 0;
