@@ -74,7 +74,7 @@ module.exports = function () {
             casinobot.sendMessage(src, "You rolled a " +caldice+" and matched your number!! You get " + payout+ " coins!", casinochan);
             coins[sys.name(src)] += payout;
           if(payout >= 500){
-                casinobot.sendAll(sys.user(src) + "just got a huge payout of " +payout+ " coins!!!!");
+                casinobot.sendAll(sys.name(src) + "just got a huge payout of " +payout+ " coins!!!!");
           }
             caldice = undefined;
             dice1 = undefined;
@@ -104,6 +104,7 @@ this.playCraps = function (src, commandData){
 			casinobot.sendMessage(src, "You don't have any coins so you are not able to play.", casinochan);
 			return;
 		}
+		bet = commandData;
         if(coins[sys.name(src)] < bet){
 			casinobot.sendMessage(src, "You don't have enough coins to make that bet.", casinochan);
 			return;
@@ -112,7 +113,6 @@ this.playCraps = function (src, commandData){
 			casinobot.sendMessage(src, "That is not a result that 3 dice can make", casinochan);
 			return;
         }
-		bet = commandData;
 		dice1 = Math.floor((Math.random()*6)+1);
 		dice2 = Math.floor((Math.random()*6)+1);
 		coins[sys.name(src)] -= bet;
@@ -122,7 +122,7 @@ this.playCraps = function (src, commandData){
 			casinobot.sendMessage(src, "You rolled a " +crapsdice+ " and got " +payout+ " coins!", casinochan);
 			coins[sys.name(src)] += payout;
           if(payout >= 500){
-			casinobot.sendAll(sys.user(src) + "just got a huge payout of " +payout+ " coins!!!!", casinochan);
+			casinobot.sendAll(sys.name(src) + "just got a huge payout of " +payout+ " coins!!!!", casinochan);
 			return;
           }
 		}
@@ -154,7 +154,7 @@ this.playCraps = function (src, commandData){
 		if(slot === 1){
 			coins[sys.name(src)] += jackpot;
 			casinobot.sendMessage(src, "You hit the jackpot!!!  You got " +jackpot+ " coins!", casinochan);
-			casinobot.sendAll(sys.user(src) + " just hit the jackpot and got " +jackpot+ " coins!!!!!");
+			casinobot.sendAll(sys.name(src) + " just hit the jackpot and got " +jackpot+ " coins!!!!!");
 			slot = undefined;
 			jackpot = 1000;
 			return;
@@ -208,12 +208,12 @@ this.showGames = function (){
 		""
     ];
     for (var i in games) {
-        casinobot.sendMessage(src, games[i], casinochan);
+        casinobot.sendMessage(src, games[i]);
     }
 };
 this.showmyCoins = function (src){
 	myCoins = coins[sys.name(src)];
-	casinobot.sendMessage(src, "You have " +myCoins+ " coins right now.", casinochan);
+	casinobot.sendMessage(src, "You have " +myCoins+ " coins right now.");
 	return;
 };
 this.showHelp = function (commandData){
@@ -222,11 +222,11 @@ this.showHelp = function (commandData){
 		return;
 	}
 	else if(commandData == "craps"){
-		casinobot.sendMessage(src, "To play type /sraps bet.  bet is how many coins you are risking.", casinochan);
+		casinobot.sendMessage(src, "To play type /sraps bet.  bet is how many coins you are risking.");
 		return;
 	}
     else if(commandData == "slots"){
-        casinobot.sendMessage(src, "To play type /slots. You winning depend on how lucky you are.", casinochan);
+        casinobot.sendMessage(src, "To play type /slots. You winning depend on how lucky you are.");
         return;
 	}
 	else{
@@ -254,11 +254,10 @@ this.showHelp = function (commandData){
 		"/mycoins To find out how many coins you have.",
 		""
 		];
-        kickbot.sendAll("NOWAI", casinochan);
         
         for (var i in some) {
             try {
-                casinobot.sendMessage(src, some[i], casinochan);
+                casinobot.sendMessage(src, some[i]);
             } catch (err) {
                 kickbot.sendAll("Error: " + err);
             }
@@ -271,7 +270,7 @@ this.showHelp = function (commandData){
 			slots: [this.playSlots, "To play the slots. Used like /slots"],
             help: [this.showHelp, "To learn how to play the games."],
             games: [this.showGames, "To see all the games you can play."],
-            mycoins: [this.showmycoins, "To find out how many coins you have."],
+            mycoins: [this.showmyCoins, "To find out how many coins you have."],
 			casinocommands: [this.showCommands, "To see a list of possible commands."]
         }
 	};
