@@ -12,7 +12,7 @@ touradmins.json, tastats.json, tourseeds.json, tourhistory.json, tours_cache.jso
 /*global print, script, sys, SESSION, sendChanAll, sendChanHtmlAll, require, Config, module*/
 
 if (typeof tourschan !== "string") {
-    tourschan = sys.channelId("Tournaments");
+    tourschan = sys.channelId("Game Corner");
 }
 
 if (typeof tourserrchan !== "string") {
@@ -851,7 +851,7 @@ function getConfigValue(file, key) {
             breaktime: 120,
             absbreaktime: 600,
             remindertime: 30,
-            channel: "Tournaments",
+            channel: "Game Corner",
             errchannel: "Developer's Den",
             tourbotcolour: "#3DAA68",
             minpercent: 5,
@@ -899,7 +899,7 @@ function initTours() {
         tourbreak: parseInt(getConfigValue("tourconfig.txt", "breaktime"), 10),
         abstourbreak: parseInt(getConfigValue("tourconfig.txt", "absbreaktime"), 10),
         reminder: parseInt(getConfigValue("tourconfig.txt", "remindertime"), 10),
-        channel: "Tournaments",
+        channel: "Game Corner",
         errchannel: "Developer's Den",
         tourbotcolour: getConfigValue("tourconfig.txt", "tourbotcolour"),
         minpercent: parseFloat(getConfigValue("tourconfig.txt", "minpercent")),
@@ -1194,7 +1194,6 @@ function tourStep() {
         if (typeof details === "object") {
             var tourtier = details[0];
             sendBotAll("A <b>"+html_escape(details[0])+"</b> event is starting soon.",tourschan,true);
-            sendBotAll("A <b>"+html_escape(details[0])+"</b> event is starting soon.",0,true);
             tours.queue.unshift({'tier': tourtier, 'starter': "~Pokemon Online~", 'parameters': details[1]});
             tours.globaltime = parseInt(sys.time(), 10)+300;
             tours.eventticks = -1;
@@ -1279,7 +1278,6 @@ function tourBattleStart(src, dest, clauses, rated, mode, bid) {
         tours.tour[key].active[name1] = "Battle";
         tours.tour[key].active[name2] = "Battle";// this avoids dq later since they made an attempt to start
         if (tours.tour[key].state == "final") {
-            sendBotAll("<a href='po:watch/"+bid+"'>The final battle of the "+getFullTourName(key)+" tournament between <b>"+html_escape(sys.name(src))+"</b> and <b>"+html_escape(sys.name(dest))+"</b> just started!</a>",0,true);
             sendBotAll("<a href='po:watch/"+bid+"'>The final battle of the "+getFullTourName(key)+" tournament between <b>"+html_escape(sys.name(src))+"</b> and <b>"+html_escape(sys.name(dest))+"</b> just started!</a>",tourschan,true);
         }
         return true;
@@ -4133,7 +4131,7 @@ function tourprintbracket(key) {
     try {
         tours.tour[key].round += 1;
         if (tours.tour[key].players.length == 1) { // winner
-            var channels = [0, tourschan];
+            var channels = [tourschan];
             var winner = toCorrectCase(tours.tour[key].players[0]);
             var isevent = tours.tour[key].event;
             var rankingorder;
