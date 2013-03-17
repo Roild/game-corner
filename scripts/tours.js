@@ -2547,8 +2547,8 @@ function tourCommand(src, command, commandData) {
                         sendBotMessage(src,"Current Value: "+tourconfig.minplayers,tourschan,false);
                         return true;
                     }
-                    if (value < 3 || value > 255) {
-                        sendBotMessage(src,"Value must be between 3 and 255.",tourschan,false);
+                    if (value < 2 || value > 255) {
+                        sendBotMessage(src,"Value must be between 2 and 255.",tourschan,false);
                         return true;
                     }
                     tourconfig.minplayers = value;
