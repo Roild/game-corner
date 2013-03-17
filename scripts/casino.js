@@ -161,7 +161,7 @@ this.playCraps = function (src, commandData){
 		}
 		else if(2<= slot <= 8){
 			coins[sys.name(src)] += 200;
-			casinobot.sendMessage(src, "You hit a great number and got 200 coins!!!", casinochan);
+			casinobot.sendMessage(src, "You hit a great number and got 200 coins!!!" + slot, casinochan);
 			jackpot += 1;
 			return;
 		}
@@ -201,11 +201,9 @@ this.playCraps = function (src, commandData){
 	};
 this.showGames = function (){
 	var games = [
-		"",
 		"+Dealer: Chuck-a-luck - Choose any number that 3 dice can make.  If the dice come up with your number you win.",
 		"+Dealer: Craps - Roll the dice if you get 7 or 11 get 5 times your bet. Role a 4,5,6,8,9,10 and get double your bet. Role 2 or 12 and you lose.",
-		"+Dealer: Slots - Press your luck with this game.  You better hope your lucky number comes up.",
-		""
+		"+Dealer: Slots - Press your luck with this game.  You better hope your lucky number comes up."
     ];
     for (var i in games) {
         casinobot.sendMessage(src, games[i]);
@@ -245,19 +243,17 @@ this.showHelp = function (commandData){
 };
     this.showCommands = function () {
 		var some = [
-		"",
 		"Commands:",
 		"/cal bet:number  To Play Chuck A Luck.",
 		"/craps bet  To play Craps",
 		"/help To learn how to play the games.",
-		"/game To see all the games you are able to play.",
-		"/mycoins To find out how many coins you have.",
-		""
+		"/games To see all the games you are able to play.",
+		"/mycoins To find out how many coins you have."
 		];
         
         for (var i in some) {
             try {
-                casinobot.sendMessage(src, some[i]);
+                casinobot.sendMessage(src, some[i], casinochan);
             } catch (err) {
                 kickbot.sendAll("Error: " + err);
             }
