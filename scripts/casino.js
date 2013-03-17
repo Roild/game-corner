@@ -93,7 +93,7 @@ module.exports = function () {
             return;
         }
         if(coins[sys.name(src)] <= 0 || coins[sys.name(src)] == undefined){
-            coins[sys.name(src)] += 100;
+            coins[sys.name(src)] == 100;
         }
 	};
 this.playCraps = function (src, commandData){
@@ -141,7 +141,7 @@ this.playCraps = function (src, commandData){
 		dice2 = undefined;
 		crapsdice = undefined;
 		if(coins[sys.name(src)] <= 0 || coins[sys.name(src)] == undefined){
-			coins[sys.name(src)] += 100;
+			coins[sys.name(src)] == 100;
 		}
 		};
 	this.playSlots = function (src){
@@ -151,7 +151,7 @@ this.playCraps = function (src, commandData){
 		}
 		coins[sys.name(src)] -= 1;
 		slot = Math.floor((Math.random()*200)+1);
-		if(slot === 1){
+		if(slot == 1){
 			coins[sys.name(src)] += jackpot;
 			casinobot.sendMessage(src, "You hit the jackpot!!!  You got " +jackpot+ " coins!", casinochan);
 			casinobot.sendAll(sys.name(src) + " just hit the jackpot and got " +jackpot+ " coins!!!!!");
@@ -159,31 +159,31 @@ this.playCraps = function (src, commandData){
 			jackpot = 1000;
 			return;
 		}
-		if(2<= slot <= 8){
+		if(slot <= 8){
 			coins[sys.name(src)] += 200;
 			casinobot.sendMessage(src, "You hit a great number and got 200 coins!!!", casinochan);
 			jackpot += 1;
 			return;
 		}
-		if(9<= slot <= 18){
+		if(slot <= 18){
 			coins[sys.name(src)] += 150;
 			casinobot.sendMessage(src, "You hit a good number and got 150 coins!!", casinochan);
 			jackpot += 1;
 			return;
 		}
-		if(19 <= slot <= 35){
+		if(slot <= 35){
 			coins[sys.name(src)] += 100;
 			casinobot.sendMessage(src, "You hit an okay number and got 100 coins!", casinochan);
 			jackpot += 1;
 			return;
 		}
-		if(36 <= slot <= 75){
+		if(slot <= 75){
 			coins[sys.name(src)] += 50;
 			casinobot.sendMessage(src, "Your got lucky and won 50 coins.", casinochan);
 			jackpot += 1;
 			return;
 		}
-		if(76 <= slot <= 125){
+		if(slot <= 125){
 			coins[sys.name(src)] += 2;
 			casinobot.sendMessage(src, "You got 2 coins.  It is better than nothing.", casinochan);
 			jackpot += 1;
@@ -196,7 +196,7 @@ this.playCraps = function (src, commandData){
 		}
 		slot = undefined;
 		if(coins[sys.name(src)] <= 0 || coins[sys.name(src)] == undefined){
-			coins[sys.name(src)] += 100;
+			coins[sys.name(src)] == 100;
 		}
 	};
 this.showGames = function (){
@@ -267,7 +267,7 @@ this.showHelp = function (commandData){
             help: [this.showHelp, "To learn how to play the games."],
             games: [this.showGames, "To see all the games you can play."],
             mycoins: [this.showmyCoins, "To find out how many coins you have."],
-			casinocommands: [this.showCommands, "To see a list of possible commands."]
+	    casinocommands: [this.showCommands, "To see a list of possible commands."]
         }
 	};
 this.handleCommand = function (src, message, channel) {
