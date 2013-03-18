@@ -7,7 +7,7 @@ module.exports = function () {
     var defaultMaster = "BeastCharizard";
     var defaultChannel = "Casino";
   
-	var coins = 100;
+	var coins = {};
 	var payout;
 	var caldice;
 	var crapsdice;
@@ -199,7 +199,7 @@ this.playCraps = function (src, commandData){
 			coins[sys.name(src)] == 100;
 		}
 	};
-this.showGames = function (){
+this.showGames = function (src, commandData){
 	var games = [
 		"+Dealer: Chuck-a-luck - Choose any number that 3 dice can make.  If the dice come up with your number you win.",
 		"+Dealer: Craps - Roll the dice if you get 7 or 11 get 5 times your bet. Role a 4,5,6,8,9,10 and get double your bet. Role 2 or 12 and you lose.",
@@ -214,7 +214,7 @@ this.showmyCoins = function (src){
 	casinobot.sendMessage(src, "You have " +myCoins+ " coins right now.");
 	return;
 };
-this.showHelp = function (commandData){
+this.showHelp = function (src, commandData){
 	if(commandData == "chuck" || commandData == "cal" || commandData == "chuck a luck"){
 		casinobot.sendMessage(src, "To play type /sAL bet:number. bet is how many coins you are risking and number is the number you are trying to roll.", casinochan);
 		return;
@@ -241,7 +241,7 @@ this.showHelp = function (commandData){
 		return;
 	}
 };
-    this.showCommands = function () {
+    this.showCommands = function (src, commandData) {
 		var some = [
 		"Commands:",
 		"/cal bet:number  To Play Chuck A Luck.",
