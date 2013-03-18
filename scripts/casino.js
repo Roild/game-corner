@@ -36,7 +36,7 @@ module.exports = function () {
 			casinobot.sendMessage(src, "You don't have enough coins to make that bet.", casinochan);
 			return;
         }
-        if(bet >= 100) {
+        if(bet > 100) {
         	casinobot.sendMessage(src, "The max bet is 99 coins.", casinochan);
         	return;
         }
@@ -113,7 +113,7 @@ this.playCraps = function (src, commandData){
 			casinobot.sendMessage(src, "You don't have enough coins to make that bet.", casinochan);
 			return;
         }
-        if (bet >= 100){
+        if (bet > 100){
         		casinobot.sendMessage(src, "The max bet is 99 coins.", casinochan);
         		return;
         }
