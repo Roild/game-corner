@@ -36,6 +36,10 @@ module.exports = function () {
 			casinobot.sendMessage(src, "You don't have enough coins to make that bet.", casinochan);
 			return;
         }
+        if(bet >= 100) {
+        	casinobot.sendMessage(src, "The max bet is 99 coins.", casinochan);
+        	return;
+        }
         if(calnumber >= 19){
 			casinobot.sendMessage(src, "That is not a result that 3 dice can make", casinochan);
 			return;
@@ -109,6 +113,10 @@ this.playCraps = function (src, commandData){
 			casinobot.sendMessage(src, "You don't have enough coins to make that bet.", casinochan);
 			return;
         }
+        if (bet >= 100){
+        		casinobot.sendMessage(src, "The max bet is 99 coins.", casinochan);
+        		return;
+        }
         if(calnumber >= 13){
 			casinobot.sendMessage(src, "That is not a result that 3 dice can make", casinochan);
 			return;
@@ -122,7 +130,7 @@ this.playCraps = function (src, commandData){
 			casinobot.sendMessage(src, "You rolled a " +crapsdice+ " and got " +payout+ " coins!", casinochan);
 			coins[sys.name(src)] += payout;
           if(payout >= 500){
-			casinobot.sendAll(sys.name(src) + "just got a huge payout of " +payout+ " coins!!!!", casinochan);
+			casinobot.sendAll(sys.name(src) + " just got a huge payout of " +payout+ " coins!!!!", casinochan);
 			return;
           }
 		}
@@ -159,31 +167,31 @@ this.playCraps = function (src, commandData){
 			jackpot = 1000;
 			return;
 		}
-		if(slot <= 8){
+		if(slot <= 5){
 			coins[sys.name(src)] += 200;
 			casinobot.sendMessage(src, "You hit a great number and got 200 coins!!!", casinochan);
 			jackpot += 1;
 			return;
 		}
-		if(slot <= 18){
+		if(slot <= 14){
 			coins[sys.name(src)] += 150;
 			casinobot.sendMessage(src, "You hit a good number and got 150 coins!!", casinochan);
 			jackpot += 1;
 			return;
 		}
-		if(slot <= 35){
+		if(slot <= 30){
 			coins[sys.name(src)] += 100;
 			casinobot.sendMessage(src, "You hit an okay number and got 100 coins!", casinochan);
 			jackpot += 1;
 			return;
 		}
-		if(slot <= 75){
+		if(slot <= 53){
 			coins[sys.name(src)] += 50;
 			casinobot.sendMessage(src, "Your got lucky and won 50 coins.", casinochan);
 			jackpot += 1;
 			return;
 		}
-		if(slot <= 125){
+		if(slot <= 85){
 			coins[sys.name(src)] += 2;
 			casinobot.sendMessage(src, "You got 2 coins.  It is better than nothing.", casinochan);
 			jackpot += 1;
@@ -216,11 +224,11 @@ this.showmyCoins = function (src){
 };
 this.showHelp = function (src, commandData){
 	if(commandData == "chuck" || commandData == "cal" || commandData == "chuck a luck"){
-		casinobot.sendMessage(src, "To play type /sAL bet:number. bet is how many coins you are risking and number is the number you are trying to roll.", casinochan);
+		casinobot.sendMessage(src, "To play type /cal [bet]:[number you are trying to hit]. bet is how many coins you are risking and number is the number you are trying to roll.", casinochan);
 		return;
 	}
 	else if(commandData == "craps"){
-		casinobot.sendMessage(src, "To play type /sraps bet.  bet is how many coins you are risking.");
+		casinobot.sendMessage(src, "To play type /craps [bet].  bet is how many coins you are risking.");
 		return;
 	}
     else if(commandData == "slots"){
