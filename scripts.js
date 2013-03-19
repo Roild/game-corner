@@ -2687,112 +2687,10 @@ userCommand: function(src, command, commandData, tar) {
         normalbot.sendChanMessage(src, "Removed a tour alert for the tier: " + tier + "!");
         return;
     }
-    // The Stupid Coin Game
+    // Flipping a coin
     if (command == "coin" || command == "flip") {
         coinbot.sendChanMessage(src, "You flipped a coin. It's " + (Math.random() < 0.5 ? "Tails" : "Heads") + "!");
-        if (!isNonNegative(SESSION.users(src).coins))
-            SESSION.users(src).coins = 0;
-        SESSION.users(src).coins++;
         return;
-    }
-    if (command == "throw") {
-/*        if (channel != sys.channelId("Coins")) {
-            coinbot.sendChanMessage(src, "No throwing here!");
-            return;
-        }*/
-        if (sys.auth(src) === 0 && SESSION.channels(channel).muteall && !SESSION.channels(channel).isChannelOperator(src)) {
-            if (SESSION.channels(channel).muteallmessages) {
-                sendChanMessage(src, SESSION.channels(channel).muteallmessage);
-            } else {
-                coinbot.sendChanMessage(src, "Respect the minutes of silence!");
-            }
-            return;
-        }
-
-        if (!isNonNegative(SESSION.users(src).coins) || SESSION.users(src).coins < 1) {
-            coinbot.sendChanMessage(src, "Need more coins? Use /flip!");
-            return;
-        }
-        if (tar === undefined) {
-            if (!isNonNegative(SESSION.global().coins)) SESSION.global().coins = 0;
-            coinbot.sendChanAll("" + sys.name(src) + " threw " + SESSION.users(src).coins + " coin(s) at the wall!");
-            SESSION.global().coins += SESSION.users(src).coins;
-        } else if (tar == src) {
-            coinbot.sendChanMessage(src, "No way...");
-            return;
-        } else {
-            coinbot.sendChanAll("" + sys.name(src) + " threw " + SESSION.users(src).coins + " coin(s) at " + sys.name(tar) + "!");
-            if (!isNonNegative(SESSION.users(tar).coins)) SESSION.users(tar).coins = 0;
-            SESSION.users(tar).coins += SESSION.users(src).coins;
-        }
-        SESSION.users(src).coins = 0;
-        return;
-    }
-    if (command == "steal") {
-        if (tar === undefined) {
-            coinbot.sendChanMessage(src, "Choose a valid target!");
-            return;
-        }
-        if (SESSION.users(tar).coins === 0) {
-        coinbot.sendChanMessage(src, "Your target does not have any coins!");
-        return;
-        }
-        coinbot.sendChanAll("" + sys.name(src) + " stole " + SESSION.users(tar).coins + " coin(s) from " + sys.name(tar) + "!");
-        SESSION.users(src).coins += SESSION.users(tar).coins;
-        SESSION.users(tar).coins = 0;
-        return;
-    }
-    if (command == "casino") {
-        var bet = parseInt(commandData, 10);
-        if (isNaN(bet)) {
-            coinbot.sendChanMessage(src, "Use it like /casino [coinamount]!");
-            return;
-        }
-        if (bet < 5) {
-            coinbot.sendChanMessage(src, "Mininum bet 5 coins!");
-            return;
-        }
-        if (bet > SESSION.users(src).coins) {
-            coinbot.sendChanMessage(src, "You don't have enough coins!");
-            return;
-        }
-        coinbot.sendChanMessage(src, "You inserted the coins into the Fruit game!");
-        SESSION.users(src).coins -= bet;
-        var res = Math.random();
-
-        if (res < 0.8) {
-            coinbot.sendChanMessage(src, "Sucks! You lost " + bet + " coins!");
-            return;
-        }
-        if (res < 0.88) {
-            coinbot.sendChanMessage(src, "You doubled the fun! You got " + 2*bet + " coins!");
-            SESSION.users(src).coins += 2*bet;
-            return;
-        }
-        if (res < 0.93) {
-            coinbot.sendChanMessage(src, "Gratz! Tripled! You got " + 3*bet + " coins ");
-            SESSION.users(src).coins += 3*bet;
-            return;
-        }
-        if (res < 0.964) {
-            coinbot.sendChanMessage(src, "Woah! " + 5*bet + " coins GET!");
-            SESSION.users(src).coins += 5*bet;
-            return;
-        }
-        if (res < 0.989) {
-            coinbot.sendChanMessage(src, "NICE job! " + 10*bet + " coins acquired!");
-            SESSION.users(src).coins += 10*bet;
-            return;
-        }
-        if (res < 0.999) {
-            coinbot.sendChanMessage(src, "AWESOME LUCK DUDE! " + 20*bet + " coins are yours!");
-            SESSION.users(src).coins += 20*bet;
-            return;
-        } else {
-            coinbot.sendChanMessage(src, "YOU HAVE BEATEN THE CASINO! " + 50*bet + " coins are yours!");
-            SESSION.users(src).coins += 50*bet;
-            return;
-        }
     }
     if (command == "myalts") {
         var ip = sys.ip(src);
@@ -2848,15 +2746,6 @@ userCommand: function(src, command, commandData, tar) {
         }
         var pokename = sys.pokemon(poke);
         normalbot.sendChanMessage(src, pokename+"'s wikipage is here: http://wiki.pokemon-online.eu/wiki/"+pokename);
-        return;
-    }
-    if (command == "wall") {
-        if (!isNonNegative(SESSION.global().coins)) SESSION.global().coins=0;
-        if (!isNonNegative(SESSION.users(src).coins)) SESSION.users(src).coins=1;
-        if (SESSION.global().coins === 0) return;
-        coinbot.sendChanAll("" + sys.name(src) + " found " + SESSION.global().coins + " coins besides the wall!");
-        SESSION.users(src).coins += SESSION.global().coins;
-        SESSION.global().coins = 0;
         return;
     }
     if(command == "shades"){
