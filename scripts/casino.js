@@ -23,6 +23,9 @@ module.exports = function () {
 	
 	
 	this.playCAL = function(src, commandData){
+	        if(coins[sys.name(src)] <= 0 || coins[sys.name(src)] == undefined){
+            		coins[sys.name(src)] == 100;
+        	}
 		if(commandData === undefined){
 			return;
 		}
@@ -96,11 +99,11 @@ module.exports = function () {
             dice3 = undefined;
             return;
         }
-        if(coins[sys.name(src)] <= 0 || coins[sys.name(src)] == undefined){
-            coins[sys.name(src)] == 100;
-        }
 	};
 this.playCraps = function (src, commandData){
+		if(coins[sys.name(src)] <= 0 || coins[sys.name(src)] == undefined){
+            		coins[sys.name(src)] == 100;
+        	}
 		if(commandData === undefined){
 			return;
 		}
@@ -148,11 +151,11 @@ this.playCraps = function (src, commandData){
 		dice1 = undefined;
 		dice2 = undefined;
 		crapsdice = undefined;
-		if(coins[sys.name(src)] <= 0 || coins[sys.name(src)] == undefined){
-			coins[sys.name(src)] == 100;
-		}
 		};
 	this.playSlots = function (src){
+	        if(coins[sys.name(src)] <= 0 || coins[sys.name(src)] == undefined){
+        	    coins[sys.name(src)] == 100;
+        	}
 		if(coins[sys.name(src)] <= 0){
 			casinobot.sendMessage(src, "You don't have any coins so you are not able to play.", casinochan);
 			return;
@@ -203,9 +206,6 @@ this.playCraps = function (src, commandData){
 			return;
 		}
 		slot = undefined;
-		if(coins[sys.name(src)] <= 0 || coins[sys.name(src)] == undefined){
-			coins[sys.name(src)] == 100;
-		}
 	};
 this.showGames = function (src, commandData){
 	var games = [
