@@ -7,7 +7,9 @@ module.exports = function () {
     var defaultMaster = "BeastCharizard";
     var defaultChannel = "Casino";
   
-	var coins = {};
+	this.coins = 0;
+    var utilities = require('utilities.js');
+    var isNonNegative = utilities.is_non_negative;
 	var payout;
 	var caldice;
 	var crapsdice;
@@ -23,19 +25,19 @@ module.exports = function () {
 	
 	
 	this.playCAL = function(src, commandData){
-	        if(coins[sys.name(src)] <= 0 || coins[sys.name(src)] == undefined){
-            		coins[sys.name(src)] == 100;
-        	}
+		if(!isNonNegative(SESSION.users(src).coins)) {
+			SESSION.users(src).coins = 100;
+		}
 		if(commandData === undefined){
 			return;
 		}
-		if(coins[sys.name(src)] <= 0){
+		if(SESSION.users(src).coins <= 0){
 			casinobot.sendMessage(src, "You don't have any coins so you are not able to play.", casinochan);
 			return;
 		}
 		bet = commandData.split(":")[0];
         calnumber = commandData.split(":")[1];
-        if(coins[sys.name(src)] < bet){
+        if(SESSION.users(src).coins < bet){
 			casinobot.sendMessage(src, "You don't have enough coins to make that bet.", casinochan);
 			return;
         }
@@ -51,7 +53,7 @@ module.exports = function () {
         dice1 = Math.floor((Math.random()*6)+1);
         dice2 = Math.floor((Math.random()*6)+1);
         dice3 = Math.floor((Math.random()*6)+1);
-        coins[sys.name(src)] -= bet;
+        SESSION.users(src).coins -= bet;
         caldice = dice1 + dice2 + dice3;
         if(caldice == calnumber){
             if(calnumber == 3 || calnumber == 18){
@@ -79,8 +81,8 @@ module.exports = function () {
                 payout = bet*1;
             }
             casinobot.sendMessage(src, "You rolled a " +caldice+" and matched your number!! You get " + payout+ " coins!", casinochan);
-            coins[sys.name(src)] += payout;
-          if(payout >= 500){
+            SESSION.users(src).coins += payout;
+          if(payout >= 400){
                 casinobot.sendAll(sys.name(src) + "just got a huge payout of " +payout+ " coins!!!!");
           }
             caldice = undefined;
@@ -101,18 +103,18 @@ module.exports = function () {
         }
 	};
 this.playCraps = function (src, commandData){
-		if(coins[sys.name(src)] <= 0 || coins[sys.name(src)] == undefined){
-            		coins[sys.name(src)] == 100;
-        	}
+		if(!isNonNegative(SESSION.users(src).coins)) {
+			SESSION.users(src).coins = 100;
+		}
 		if(commandData === undefined){
 			return;
 		}
-		if(coins[sys.name(src)] <= 0){
+		if(SESSION.users(src).coins <= 0){
 			casinobot.sendMessage(src, "You don't have any coins so you are not able to play.", casinochan);
 			return;
 		}
 		bet = commandData;
-        if(coins[sys.name(src)] < bet){
+        if(SESSION.users(src).coins < bet){
 			casinobot.sendMessage(src, "You don't have enough coins to make that bet.", casinochan);
 			return;
         }
@@ -126,13 +128,13 @@ this.playCraps = function (src, commandData){
         }
 		dice1 = Math.floor((Math.random()*6)+1);
 		dice2 = Math.floor((Math.random()*6)+1);
-		coins[sys.name(src)] -= bet;
+		SESSION.users(src).coins -= bet;
 	crapsdice = dice1 + dice2;
 		if(crapsdice === 7 || crapsdice === 11){
 			payout = bet*5;
 			casinobot.sendMessage(src, "You rolled a " +crapsdice+ " and got " +payout+ " coins!", casinochan);
-			coins[sys.name(src)] += payout;
-          if(payout >= 500){
+			SESSION.users(src).coins += payout;
+          if(payout >= 400){
 			casinobot.sendAll(sys.name(src) + " just got a huge payout of " +payout+ " coins!!!!", casinochan);
 			return;
           }
@@ -140,12 +142,12 @@ this.playCraps = function (src, commandData){
 		else if(crapsdice === 4 || crapsdice === 5 || crapsdice === 6 || crapsdice === 8 || crapsdice === 9 || crapsdice === 10){
 			payout = bet*2;
 			casinobot.sendMessage(src, "You rolled a " +crapsdice+ " and got " +payout+ " coins!", casinochan);
-			coins[sys.name(src)] += payout;
+			SESSION.users(src).coins += payout;
 			return;
 		}
 		else{
 			casinobot.sendMessage(src, "You rolled a " +crapsdice+ " and lost " +bet+ " coins!", casinochan);
-			coins[sys.name(src)] -= bet;
+			SESSION.users(src).coins -= bet;
 			return;
 		}
 		dice1 = undefined;
@@ -153,17 +155,17 @@ this.playCraps = function (src, commandData){
 		crapsdice = undefined;
 		};
 	this.playSlots = function (src){
-	        if(coins[sys.name(src)] <= 0 || coins[sys.name(src)] == undefined){
-        	    coins[sys.name(src)] == 100;
-        	}
-		if(coins[sys.name(src)] <= 0){
+		if(!isNonNegative(SESSION.users(src).coins)) {
+			SESSION.users(src).coins = 100;
+		}
+		if(SESSION.users(src).coins <= 0){
 			casinobot.sendMessage(src, "You don't have any coins so you are not able to play.", casinochan);
 			return;
 		}
-		coins[sys.name(src)] -= 1;
+		SESSION.users(src).coins -= 1;
 		slot = Math.floor((Math.random()*200)+1);
 		if(slot == 1){
-			coins[sys.name(src)] += jackpot;
+			SESSION.users(src).coins += jackpot;
 			casinobot.sendMessage(src, "You hit the jackpot!!!  You got " +jackpot+ " coins!", casinochan);
 			casinobot.sendAll(sys.name(src) + " just hit the jackpot and got " +jackpot+ " coins!!!!!");
 			slot = undefined;
@@ -171,31 +173,31 @@ this.playCraps = function (src, commandData){
 			return;
 		}
 		if(slot <= 5){
-			coins[sys.name(src)] += 200;
+			SESSION.users(src).coins += 200;
 			casinobot.sendMessage(src, "You hit a great number and got 200 coins!!!", casinochan);
 			jackpot += 1;
 			return;
 		}
 		if(slot <= 14){
-			coins[sys.name(src)] += 150;
+			SESSION.users(src).coins += 150;
 			casinobot.sendMessage(src, "You hit a good number and got 150 coins!!", casinochan);
 			jackpot += 1;
 			return;
 		}
 		if(slot <= 30){
-			coins[sys.name(src)] += 100;
+			SESSION.users(src).coins += 100;
 			casinobot.sendMessage(src, "You hit an okay number and got 100 coins!", casinochan);
 			jackpot += 1;
 			return;
 		}
 		if(slot <= 53){
-			coins[sys.name(src)] += 50;
+			SESSION.users(src).coins += 50;
 			casinobot.sendMessage(src, "Your got lucky and won 50 coins.", casinochan);
 			jackpot += 1;
 			return;
 		}
 		if(slot <= 85){
-			coins[sys.name(src)] += 2;
+			SESSION.users(src).coins += 2;
 			casinobot.sendMessage(src, "You got 2 coins.  It is better than nothing.", casinochan);
 			jackpot += 1;
 			return;
@@ -218,7 +220,7 @@ this.showGames = function (src, commandData){
     }
 };
 this.showmyCoins = function (src){
-	myCoins = coins[sys.name(src)];
+	myCoins = SESSION.users(src).coins;
 	casinobot.sendMessage(src, "You have " +myCoins+ " coins right now.");
 	return;
 };
