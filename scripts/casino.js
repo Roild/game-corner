@@ -7,7 +7,7 @@ module.exports = function () {
     var defaultMaster = "BeastCharizard";
     var defaultChannel = "Casino";
   
-	this.coins = 0;
+	this.coins = 100;
     var utilities = require('utilities.js');
     var isNonNegative = utilities.is_non_negative;
 	var payout;
