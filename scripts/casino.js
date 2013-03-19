@@ -7,7 +7,7 @@ module.exports = function () {
     var defaultMaster = "BeastCharizard";
     var defaultChannel = "Casino";
   
-	this.coins = 100;
+	this.coins = 0;
     var utilities = require('utilities.js');
     var isNonNegative = utilities.is_non_negative;
 	var payout;
@@ -25,7 +25,7 @@ module.exports = function () {
 	
 	
 	this.playCAL = function(src, commandData){
-		if(!isNonNegative(SESSION.users(src).coins)) {
+		if(!isNonNegative(SESSION.users(src).coins) || SESSION.users(src).coins <= 0) {
 			SESSION.users(src).coins = 100;
 		}
 		if(commandData === undefined){
@@ -103,7 +103,7 @@ module.exports = function () {
         }
 	};
 this.playCraps = function (src, commandData){
-		if(!isNonNegative(SESSION.users(src).coins)) {
+		if(!isNonNegative(SESSION.users(src).coins)|| SESSION.users(src).coins <= 0) {
 			SESSION.users(src).coins = 100;
 		}
 		if(commandData === undefined){
@@ -155,7 +155,7 @@ this.playCraps = function (src, commandData){
 		crapsdice = undefined;
 		};
 	this.playSlots = function (src){
-		if(!isNonNegative(SESSION.users(src).coins)) {
+		if(!isNonNegative(SESSION.users(src).coins) || SESSION.users(src).coins <= 0) {
 			SESSION.users(src).coins = 100;
 		}
 		if(SESSION.users(src).coins <= 0){
