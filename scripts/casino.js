@@ -288,7 +288,7 @@ this.showHelp = function (src, commandData){
 	    slots: [this.playSlots, "To play the slots. Used like /slots"],
             help: [this.showHelp, "To learn how to play the games."],
             games: [this.showGames, "To see all the games you can play."],
-            jackpot: [this.showJackpot, "To see what the current jackpot is."]
+            jackpot: [this.showJackpot, "To see what the current jackpot is."],
             mycoins: [this.showmyCoins, "To find out how many coins you have."],
 	    casinocommands: [this.showCommands, "To see a list of possible commands."]
         }
