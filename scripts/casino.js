@@ -37,6 +37,10 @@ module.exports = function () {
 		}
 		bet = commandData.split(":")[0];
         calnumber = commandData.split(":")[1];
+        if(isNaN(bet) || isNaN(calnumber)) {
+        	casinobot.sendMessage(src, "You use it like /cal [number you are betting]:[number you want to get].", casinochan);
+        	return;
+        }
         if(SESSION.users(src).coins < bet){
 			casinobot.sendMessage(src, "You don't have enough coins to make that bet.", casinochan);
 			return;
@@ -114,6 +118,10 @@ this.playCraps = function (src, commandData){
 			return;
 		}
 		bet = commandData;
+		if(isNaN(bet)) {
+			casinobot.sendMessage(src, "You use it like /craps [number of coins you are betting].", casinochan);
+			return;
+		}
         if(SESSION.users(src).coins < bet){
 			casinobot.sendMessage(src, "You don't have enough coins to make that bet.", casinochan);
 			return;
@@ -122,8 +130,8 @@ this.playCraps = function (src, commandData){
         		casinobot.sendMessage(src, "The max bet is 99 coins.", casinochan);
         		return;
         }
-        if(calnumber >= 13){
-			casinobot.sendMessage(src, "That is not a result that 3 dice can make", casinochan);
+        if(crapsnumber >= 13){
+			casinobot.sendMessage(src, "That is not a result that 2 dice can make", casinochan);
 			return;
         }
 		dice1 = Math.floor((Math.random()*6)+1);
@@ -163,7 +171,7 @@ this.playCraps = function (src, commandData){
 			return;
 		}
 		SESSION.users(src).coins -= 1;
-		slot = Math.floor((Math.random()*200)+1);
+		slot = Math.floor((Math.random()*250)+1);
 		if(slot == 1){
 			SESSION.users(src).coins += jackpot;
 			casinobot.sendMessage(src, "You hit the jackpot!!!  You got " +jackpot+ " coins!", casinochan);
@@ -221,7 +229,11 @@ this.showGames = function (src, commandData){
 };
 this.showmyCoins = function (src){
 	myCoins = SESSION.users(src).coins;
-	casinobot.sendMessage(src, "You have " +myCoins+ " coins right now.");
+	casinobot.sendMessage(src, "You have " +myCoins+ " coins right now.", casinochan);
+	return;
+};
+this.showJackpot = function (src){
+	casinobot.sendMessage(src, "The current jackpot is " + jackpot + " coins!", casinochan);
 	return;
 };
 this.showHelp = function (src, commandData){
@@ -276,6 +288,7 @@ this.showHelp = function (src, commandData){
 	    slots: [this.playSlots, "To play the slots. Used like /slots"],
             help: [this.showHelp, "To learn how to play the games."],
             games: [this.showGames, "To see all the games you can play."],
+            jackpot: [this.showJackpot, "To see what the current jackpot is."]
             mycoins: [this.showmyCoins, "To find out how many coins you have."],
 	    casinocommands: [this.showCommands, "To see a list of possible commands."]
         }
