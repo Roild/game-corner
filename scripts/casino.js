@@ -144,10 +144,15 @@ this.playCraps = function (src, commandData){
           }
 		}
 		else if(crapsdice === 4 || crapsdice === 5 || crapsdice === 6 || crapsdice === 8 || crapsdice === 9 || crapsdice === 10){
+			var extra1 = Math.floor((Math.random()*6)+1);
+			var extra2 = Math.floor((Math.random()*6)+1);
+			var extra = extra1 + extra2;
+			if (crapsdice = extra) {
 			payout = bet*2;
 			casinobot.sendMessage(src, "You rolled a " +crapsdice+ " and got " +payout+ " coins!", casinochan);
 			SESSION.users(src).coins += payout;
 			return;
+			}
 		}
 		else{
 			casinobot.sendMessage(src, "You rolled a " +crapsdice+ " and lost " +bet+ " coins!", casinochan);
