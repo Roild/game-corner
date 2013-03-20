@@ -189,25 +189,25 @@ this.playCraps = function (src, commandData){
 		}
 		if(slot <= 5){
 			SESSION.users(src).coins += 150;
-			casinobot.sendMessage(src, "You hit a great number and got 200 coins!!!", casinochan);
+			casinobot.sendMessage(src, "You hit a great number and got 150 coins!!!", casinochan);
 			jackpot += 1;
 			return;
 		}
 		if(slot <= 14){
 			SESSION.users(src).coins += 100;
-			casinobot.sendMessage(src, "You hit a good number and got 150 coins!!", casinochan);
+			casinobot.sendMessage(src, "You hit a good number and got 100 coins!!", casinochan);
 			jackpot += 1;
 			return;
 		}
 		if(slot <= 30){
 			SESSION.users(src).coins += 50;
-			casinobot.sendMessage(src, "You hit an okay number and got 100 coins!", casinochan);
+			casinobot.sendMessage(src, "You hit an okay number and got 50 coins!", casinochan);
 			jackpot += 1;
 			return;
 		}
 		if(slot <= 53){
 			SESSION.users(src).coins += 10;
-			casinobot.sendMessage(src, "Your got lucky and won 50 coins.", casinochan);
+			casinobot.sendMessage(src, "Your got lucky and won 10 coins.", casinochan);
 			jackpot += 1;
 			return;
 		}
