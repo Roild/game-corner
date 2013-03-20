@@ -156,13 +156,11 @@ this.playCraps = function (src, commandData){
 			}
 			else {
 				casinobot.sendMessage(src, "Your two rolls of " + crapsdice + " and " + extra + " didn't match so you lost " + bet + " coins.", casinochan);
-				SESSION.users(src).coins -= bet;
 				return;
 			}
 		}
 		else{
 			casinobot.sendMessage(src, "You rolled a " +crapsdice+ " and lost " +bet+ " coins!", casinochan);
-			SESSION.users(src).coins -= bet;
 			return;
 		}
 		dice1 = undefined;
@@ -190,25 +188,25 @@ this.playCraps = function (src, commandData){
 			return;
 		}
 		if(slot <= 5){
-			SESSION.users(src).coins += 200;
+			SESSION.users(src).coins += 150;
 			casinobot.sendMessage(src, "You hit a great number and got 200 coins!!!", casinochan);
 			jackpot += 1;
 			return;
 		}
 		if(slot <= 14){
-			SESSION.users(src).coins += 150;
+			SESSION.users(src).coins += 100;
 			casinobot.sendMessage(src, "You hit a good number and got 150 coins!!", casinochan);
 			jackpot += 1;
 			return;
 		}
 		if(slot <= 30){
-			SESSION.users(src).coins += 100;
+			SESSION.users(src).coins += 50;
 			casinobot.sendMessage(src, "You hit an okay number and got 100 coins!", casinochan);
 			jackpot += 1;
 			return;
 		}
 		if(slot <= 53){
-			SESSION.users(src).coins += 50;
+			SESSION.users(src).coins += 10;
 			casinobot.sendMessage(src, "Your got lucky and won 50 coins.", casinochan);
 			jackpot += 1;
 			return;
