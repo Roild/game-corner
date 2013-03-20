@@ -148,10 +148,15 @@ this.playCraps = function (src, commandData){
 			var extra2 = Math.floor((Math.random()*6)+1);
 			var extra = extra1 + extra2;
 			if (crapsdice = extra) {
-			payout = bet*2;
-			casinobot.sendMessage(src, "You rolled a " +crapsdice+ " and got " +payout+ " coins!", casinochan);
-			SESSION.users(src).coins += payout;
-			return;
+				payout = bet*2;
+				casinobot.sendMessage(src, "You rolled a " +crapsdice+ "and a " + extra + " and got " +payout+ " coins!", casinochan);
+				SESSION.users(src).coins += payout;
+				return;
+			}
+			else {
+				casinobot.sendMessage(src, "Your two rolls of " + crapsdice + " and " + extra + "didn't match so you lost " + bet + " coins.", casinochan);
+				SESSION.users(src).coins -= bet;
+				return;
 			}
 		}
 		else{
