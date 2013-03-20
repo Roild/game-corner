@@ -130,10 +130,6 @@ this.playCraps = function (src, commandData){
         		casinobot.sendMessage(src, "The max bet is 99 coins.", casinochan);
         		return;
         }
-        if(crapsnumber >= 13){
-			casinobot.sendMessage(src, "That is not a result that 2 dice can make", casinochan);
-			return;
-        }
 		dice1 = Math.floor((Math.random()*6)+1);
 		dice2 = Math.floor((Math.random()*6)+1);
 		SESSION.users(src).coins -= bet;
@@ -171,7 +167,7 @@ this.playCraps = function (src, commandData){
 			return;
 		}
 		SESSION.users(src).coins -= 1;
-		slot = Math.floor((Math.random()*250)+1);
+		slot = Math.floor((Math.random()*300)+1);
 		if(slot == 1){
 			SESSION.users(src).coins += jackpot;
 			casinobot.sendMessage(src, "You hit the jackpot!!!  You got " +jackpot+ " coins!", casinochan);
