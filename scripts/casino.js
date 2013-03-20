@@ -155,7 +155,7 @@ this.playCraps = function (src, commandData){
 				return;
 			}
 			else {
-				casinobot.sendMessage(src, "Your two rolls of " + crapsdice + " and " + extra + "didn't match so you lost " + bet + " coins.", casinochan);
+				casinobot.sendMessage(src, "Your two rolls of " + crapsdice + " and " + extra + " didn't match so you lost " + bet + " coins.", casinochan);
 				SESSION.users(src).coins -= bet;
 				return;
 			}
