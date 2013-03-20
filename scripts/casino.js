@@ -142,14 +142,15 @@ this.playCraps = function (src, commandData){
 			casinobot.sendAll(sys.name(src) + " just got a huge payout of " +payout+ " coins!!!!", casinochan);
 			return;
           }
+          return;
 		}
 		else if(crapsdice === 4 || crapsdice === 5 || crapsdice === 6 || crapsdice === 8 || crapsdice === 9 || crapsdice === 10){
 			var extra1 = Math.floor((Math.random()*6)+1);
 			var extra2 = Math.floor((Math.random()*6)+1);
 			var extra = extra1 + extra2;
-			if (crapsdice = extra) {
+			if (crapsdice == extra) {
 				payout = bet*2;
-				casinobot.sendMessage(src, "You rolled a " +crapsdice+ "and a " + extra + " and got " +payout+ " coins!", casinochan);
+				casinobot.sendMessage(src, "You rolled a " +crapsdice+ " and a " + extra + " and got " +payout+ " coins!", casinochan);
 				SESSION.users(src).coins += payout;
 				return;
 			}
@@ -166,6 +167,8 @@ this.playCraps = function (src, commandData){
 		}
 		dice1 = undefined;
 		dice2 = undefined;
+		extra1 = undefined;
+		extra2 = undefined;
 		crapsdice = undefined;
 		};
 	this.playSlots = function (src){
