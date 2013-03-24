@@ -182,7 +182,7 @@ this.playCraps = function (src, commandData){
 		if(slot == 1){
 			SESSION.users(src).coins += jackpot;
 			casinobot.sendMessage(src, "You hit the jackpot!!!  You got " +jackpot+ " coins!", casinochan);
-			casinobot.sendAll(sys.name(src) + " just hit the jackpot and got " +jackpot+ " coins!!!!!");
+			casinobot.sendAll(sys.name(src) + " just hit the jackpot and got " +jackpot+ " coins in #casino!!!!!");
 			slot = undefined;
 			jackpot = 1000;
 			return;
@@ -227,7 +227,7 @@ this.playCraps = function (src, commandData){
 this.showGames = function (src, commandData){
 	var games = [
 		"+Dealer: Chuck-a-luck - Choose any number that 3 dice can make.  If the dice come up with your number you win.",
-		"+Dealer: Craps - Roll the dice if you get 7 or 11 get 5 times your bet. Role a 4,5,6,8,9,10 and get double your bet. Role 2 or 12 and you lose.",
+		"+Dealer: Craps - Roll the dice if you get 7 or 11 get 5 times your bet. Role a 4,5,6,8,9,10 then you roll another pair of dice and if they number match you get double your bet. Role 2 or 12 and you lose.",
 		"+Dealer: Slots - Press your luck with this game.  You better hope your lucky number comes up."
     ];
     for (var i in games) {
