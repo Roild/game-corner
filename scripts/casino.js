@@ -1,5 +1,5 @@
 /*jshint "laxbreak":true,"shadow":true,"undef":true,"evil":true,"trailing":true,"proto":true,"withstmt":true*/
-/*global sys:true, sendChanHtmlAll:true, module:true, SESSION:true, casinochan, casinobot, script, require, kickbot */
+/*global sys:true, sendChanHtmlAll:true, module:true, SESSION:true, casinochan, casinobot, script, require, kickbot, poker */
 module.exports = (function () {
     var casino = this,
         casinochan;
@@ -16,6 +16,8 @@ module.exports = (function () {
         dice3, slot, jackpot = 1000;
     
     this.coins = 0;
+    this.chan = undefined;
+    this.poker = new (require('poker.js'))(this);
     
 	this.playCAL = function (src, commandData) {
 		if (!isNonNegative(SESSION.users(src).coins) || SESSION.users(src).coins <= 0) {
@@ -292,15 +294,21 @@ module.exports = (function () {
             commandData,
             pos = message.indexOf(' ');
         
+        if (channel !== casinochan) {
+            return;
+        }
+        
+        if (poker.handleCommand(src, message, channel)) {
+            return true;
+        }
+        
         if (pos !== -1) {
             command = message.substring(0, pos).toLowerCase();
             commandData = message.substr(pos + 1);
         } else {
             command = message.substr(0).toLowerCase();
         }
-        if (channel !== casinochan) {
-            return;
-        }
+        
         if (casino.casinocommands.user.hasOwnProperty(command)) { //Ricetip: You will need this block to make commands work.
             casino.casinocommands.user[command][0].call(casino, src, commandData);
             return true;
@@ -313,6 +321,8 @@ module.exports = (function () {
         } else {
             casinochan = sys.createChannel(name);
         }
+        casino.chan = casinochan;
+        
         SESSION.global().channelManager.restoreSettings(casinochan);
         SESSION.channels(casinochan).perm = true;
         SESSION.channels(casinochan).master = defaultMaster;
@@ -326,6 +336,7 @@ module.exports = (function () {
     return { //Ricetip: You will probably need this. You can add/renive other events here, just make sure the methods exist!
         init: casino.init,
         handleCommand: casino.handleCommand,
-        beforeChannelJoin: casino.beforeChannelJoin
+        beforeChannelJoin: casino.beforeChannelJoin,
+        step: poker.step
     };
 }());

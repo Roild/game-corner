@@ -44,7 +44,7 @@
  * cards.generators { name: function }
  */
 
-var rand = require('rand-utils');
+var rand = require('rand-utils.js');
 
 exports.useArc4 = false;
 
