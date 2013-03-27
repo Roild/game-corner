@@ -262,6 +262,11 @@ this.showHelp = function (src, commandData){
 		"",
 		"Type /help CAL or /help Chuck a Luck to learn how to play Chuck a Luck.",
 		"Type /help Craps to learn how to play Craps.",
+		"",
+		"/cal bet:number To Play Chuck A Luck.",
+		"/craps bet To play Craps",
+		"/games To see all the games you are able to play.",
+		"/mycoins To find out how many coins you have.",
 		""
 		];
         for (var i in help) {
