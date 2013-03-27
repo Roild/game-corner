@@ -2138,8 +2138,9 @@ startUpTime: function() {
 },
 
 afterLogIn : function(src) {
-    sys.sendMessage(src, "*** Type in /Rules to see the rules. ***");
-    commandbot.sendMessage(src, "Use !commands to see the commands!");
+    sys.sendMessage(src, "*** Welcome to the Porygon's Casino at Game Corner server! ***");
+    commandbot.sendMessage(src, "Use /commands to see the commands!");
+    sys.putInChannel(src, casinochan);
 
     if (sys.numPlayers() > maxPlayersOnline) {
         maxPlayersOnline = sys.numPlayers();
