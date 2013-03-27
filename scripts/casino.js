@@ -135,21 +135,17 @@ this.playCraps = function (src, commandData){
 		SESSION.users(src).coins -= bet;
 	crapsdice = dice1 + dice2;
 		if(crapsdice === 7 || crapsdice === 11){
-			payout = bet*5;
+			payout = bet*2.5;
 			casinobot.sendMessage(src, "You rolled a " +crapsdice+ " and got " +payout+ " coins!", casinochan);
 			SESSION.users(src).coins += payout;
-          if(payout >= 400){
-			casinobot.sendAll(sys.name(src) + " just got a huge payout of " +payout+ " coins!!!!", casinochan);
-			return;
-          }
-          return;
+                        return;
 		}
 		else if(crapsdice === 4 || crapsdice === 5 || crapsdice === 6 || crapsdice === 8 || crapsdice === 9 || crapsdice === 10){
 			var extra1 = Math.floor((Math.random()*6)+1);
 			var extra2 = Math.floor((Math.random()*6)+1);
 			var extra = extra1 + extra2;
 			if (crapsdice == extra) {
-				payout = bet*2;
+				payout = bet*1.75;
 				casinobot.sendMessage(src, "You rolled a " +crapsdice+ " and a " + extra + " and got " +payout+ " coins!", casinochan);
 				SESSION.users(src).coins += payout;
 				return;
@@ -260,8 +256,9 @@ this.showHelp = function (src, commandData){
         
 		var help = [
 		"",
-		"Type /help CAL or /help Chuck a Luck to learn how to play Chuck a Luck.",
-		"Type /help Craps to learn how to play Craps.",
+		"Type /help cal or /help chuck a luck to learn how to play Chuck a Luck.",
+		"Type /help craps to learn how to play Craps.",
+		"Type /help slots to learn how to play Slots.",
 		"",
 		"/cal bet:number To Play Chuck A Luck.",
 		"/craps bet To play Craps",
