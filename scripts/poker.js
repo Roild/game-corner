@@ -1,4 +1,5 @@
-/*global module, require, sys, casinobot, Config, broadcast, send*/
+/*jslint es5: true, evil: true, plusplus: true, sloppy: true, vars: true*/
+/*global module, require, sys, casinobot, Config, broadcast, send, gamestate_start, resetGame*/
 
 // implementing Texas Hold'em
 module.exports = function (casino) {
@@ -14,16 +15,30 @@ module.exports = function (casino) {
                 if (game.state !== 'signup') {
                     return send(src, "You can't sign up right now. Try later.");
                 }
-                // exceptions can be made to this.
-                if (game.ips.indexOf(sys.ip(src))) {
-                    return 
+                if (game.signups.indexOf(sys.name(src)) !== -1) {
+                    return send(src, "You've already signed up.");
                 }
+                // exceptions can be made to this.
+                if (game.ips.indexOf(sys.ip(src)) !== -1) {
+                    return send(src, "Your IP has already signed up.");
+                }
+                
+                game.signups.push(sys.name(src));
+                game.ips.push(sys.ip(src));
+                broadcast(sys.name(src) + " joined! " + game.ticks + " seconds left!");
             }
         },
         mod: {
             start: function (src, data) {
                 game.state = 'signup';
-                broadcast(sys.name(src) + " started a game of Texas Hold'em Poker! Type /joinp to join!");
+                game.nextState = gamestate_start;
+                game.ticks = 60;
+                
+                broadcast(sys.name(src) + " started a game of Texas Hold'em Poker! Type /joinp to join (you have " + game.ticks + " seconds to join)!");
+            },
+            stop: function (src, data) {
+                resetGame();
+                broadcast(sys.name(src) + " stopped the game!");
             }
         }
     };
@@ -66,13 +81,34 @@ module.exports = function (casino) {
     function resetGame() {
         game = {
             players: {},
+            signups: [],
             ips: [],
+            nextState: function () {},
+            ticks: 0,
             state: 'none'
         };
     }
     
+    function step() {
+        --game.ticks;
+        
+        if (game.ticks === 0) {
+            game.nextState();
+        }
+    }
+    
     resetGame();
         
+    // game states
+    function gamestate_start() { // when the signups have ended
+        game.ticks = -1;
+        game.signups.forEach(function (player) {
+            game.players[player.toLowerCase] = {
+                name: player
+            }
+        });
+    }
+    
     return {
         handleCommand: function (src, message, channel) {
             try {
@@ -80,6 +116,7 @@ module.exports = function (casino) {
             } catch (e) {
                 broadcast("Error with poker command " + message.split(' ')[0] + ": " + e + " on " + e.lineNumber + ".");
             }
-        }
+        },
+        step: step
     };
 };
