@@ -4866,7 +4866,7 @@ beforeChatMessage: function(src, message, chan) {
             }
         }
 
-        if (sys.auth(src) > 1) {
+        if (sys.auth(src) > 1 || isSuperAdmin(src)) {
             if (this.adminCommand(src, command, commandData, tar) != "no command") {
                 return;
             }
