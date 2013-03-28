@@ -135,7 +135,7 @@ this.playCraps = function (src, commandData){
 		SESSION.users(src).coins -= bet;
 	crapsdice = dice1 + dice2;
 		if(crapsdice === 7 || crapsdice === 11){
-			payout = bet*2.5;
+			payout = Math.floor(bet*2.5);
 			casinobot.sendMessage(src, "You rolled a " +crapsdice+ " and got " +payout+ " coins!", casinochan);
 			SESSION.users(src).coins += payout;
                         return;
@@ -145,7 +145,7 @@ this.playCraps = function (src, commandData){
 			var extra2 = Math.floor((Math.random()*6)+1);
 			var extra = extra1 + extra2;
 			if (crapsdice == extra) {
-				payout = bet*1.75;
+				payout = Math.floor(bet*1.75);
 				casinobot.sendMessage(src, "You rolled a " +crapsdice+ " and a " + extra + " and got " +payout+ " coins!", casinochan);
 				SESSION.users(src).coins += payout;
 				return;
