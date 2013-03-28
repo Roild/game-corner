@@ -301,13 +301,6 @@ module.exports = (new function () {
             commandData,
             pos = message.indexOf(' ');
         
-        if (channel !== casinochan) {
-            return;
-        }
-        if (casino.poker.handleCommand(src, message, channel) === true) {
-            return true;
-        }
-        
         if (pos !== -1) {
             command = message.substring(0, pos).toLowerCase();
             commandData = message.substr(pos + 1);
@@ -315,9 +308,15 @@ module.exports = (new function () {
             command = message.substr(0).toLowerCase();
         }
         
+        if (channel !== casinochan && ['casinocommands'].indexOf(command) === -1) {
+            return;
+        }
+        if (casino.poker.handleCommand(src, message, channel) === true) {
+            return true;
+        }
         if (['cal', 'craps', 'slots'].indexOf(command) !== -1) {
             if (cooldowns.indexOf(src) !== -1) {
-                casinobot.sendMessage(src, "Don't be so eager to lose all your coins", casinochan);
+                casinobot.sendMessage(src, "Don't be so eager to lose all your coins!", casinochan);
                 return;
             }
             cooldowns.push(src);
@@ -353,12 +352,20 @@ module.exports = (new function () {
         init: casino.init,
         handleCommand: casino.handleCommand,
         beforeChannelJoin: casino.beforeChannelJoin,
+        // todo: make this run
         step: function () {
-            //if (++stepTimer % 60) { // every minute
+            //if (++stepTimer % 60 === 0) { // every minute
               //  casino.memoryHash.add('coins', JSON.stringify(this.coins));
             //}
             
             casino.poker.step();
-        }
+        },
+        onHelp: function (src, topic, channel) {
+            if (topic === "casino") {
+                casino.handleCommand(src, "casinocommands", channel);
+                return true;
+            }
+        },
+        "help-string": "casino: To know of casino commands."
     };
 }());
