@@ -304,9 +304,9 @@ module.exports = (function () {
             return;
         }
         
-        if (this.poker.handleCommand(src, message, channel) === true) {
-            return true;
-        }
+      //  if (this.poker.handleCommand(src, message, channel) === true) {
+        //    return true;
+       // }
         
         if (pos !== -1) {
             command = message.substring(0, pos).toLowerCase();
@@ -317,7 +317,7 @@ module.exports = (function () {
         
         if (['cal', 'craps', 'slots'].indexOf(command) !== -1) {
             if (cooldowns.indexOf(src) !== -1) {
-                casinobot.sendMessage(src, "Calm that down. We expect you to be a gentleman.", casinochan);
+                casinobot.sendMessage(src, "Don't be so eager to lose all your coins", casinochan);
                 return;
             }
             cooldowns.push(src);
@@ -358,7 +358,7 @@ module.exports = (function () {
               //  casino.memoryHash.add('coins', JSON.stringify(this.coins));
             //}
             
-            this.poker.step();
+           // this.poker.step();
         }
     };
 }());
