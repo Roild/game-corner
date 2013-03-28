@@ -27,6 +27,8 @@ module.exports = (function () {
         if (staffchannel) {
             bot.sendAll("Couldn't load poker: " + e, staffchannel);
         }
+        
+        this.poker = {handleCommand: function () {}, step: function () {}};
     }
    */ 
 	this.playCAL = function (src, commandData) {
@@ -302,7 +304,7 @@ module.exports = (function () {
             return;
         }
         
-        if (poker.handleCommand(src, message, channel)) {
+        if (this.poker.handleCommand(src, message, channel) === true) {
             return true;
         }
         
@@ -356,7 +358,7 @@ module.exports = (function () {
               //  casino.memoryHash.add('coins', JSON.stringify(this.coins));
             //}
             
-            poker.step();
+            this.poker.step();
         }
     };
 }());
