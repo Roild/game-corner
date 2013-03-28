@@ -16,8 +16,8 @@ module.exports = (function () {
     
     var cooldowns = [];
     
-    this.memoryHash = new (require('memoryhash.js'))('casino-data.json');
-    this.coins = JSON.parse((casino.memoryHash.get('coins') || "{}"));
+    //this.memoryHash = new (require('memoryhash.js'))('casino-data.json');
+    this.coins = {};//JSON.parse((casino.memoryHash.get('coins') || "{}"));
     this.chan = undefined;
     this.poker = new (require('poker.js'))(casino);
     
@@ -344,9 +344,9 @@ module.exports = (function () {
         handleCommand: casino.handleCommand,
         beforeChannelJoin: casino.beforeChannelJoin,
         step: function () {
-            if (++stepTimer % 60) { // every minute
-                casino.memoryHash.add('coins', JSON.stringify(this.coins));
-            }
+            //if (++stepTimer % 60) { // every minute
+              //  casino.memoryHash.add('coins', JSON.stringify(this.coins));
+            //}
             
             poker.step();
         }
