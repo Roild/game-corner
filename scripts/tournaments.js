@@ -1113,6 +1113,7 @@ module.exports = {
             return;
 
         for (var i = 0; i < permaTours.length; ++i) {
+            if (permaTours[i] === 0) continue; // don't include main.
             if (sys.channel(permaTours[i]) !== undefined) {
                 var tournament = new Tournament(permaTours[i]);
                 tournament.announceInit();
@@ -1138,6 +1139,10 @@ module.exports = {
             command = message.substr(0).toLowerCase();
         }
 
+        if (channel === 0) { // don't parse these in main
+            return false;
+        }
+        
         if (module.tournaments[channel] !== undefined) {
             if (command in module.tournaments[channel].commands) {
                 module.tournaments[channel].commands[command](source, commandData);
@@ -1160,6 +1165,7 @@ module.exports = {
                 if (ind >= 0) {
                     SESSION.global().permaTours.splice(ind, 1);
                 }
+                sys.saveVal("tournaments*permaTours", JSON.stringify(SESSION.global().permaTours));
                 return true;
             }
         } else if (command == "enabletours" && (sys.auth(source) >= 2 || SESSION.channels(channel).isChannelAdmin(source))) {

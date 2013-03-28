@@ -21,7 +21,7 @@ var Config = {
     hangbot: "Unown",
     bfbot: "Deoxys",
     // suspectvoting.js available, but not in use
-    Plugins: ["mafia.js", "amoebagame.js", "tournaments.js", "tourstats.js", "trivia.js", "tours.js", "newtourstats.js", "auto_smute.js", "battlefactory.js", "hangman.js", "casino.js"],
+    Plugins: ["mafia.js", "amoebagame.js", "tournaments.js", "tourstats.js", "trivia.js", "tours.js", "newtourstats.js", "auto_smute.js", "battlefactory.js", "hangman.js", "casino.js", "poker.js", "cards.js", "rand-utils.js"],
     Mafia: {
         bot: "Murkrow",
         norepeat: 11,
@@ -50,6 +50,7 @@ var Config = {
     ],
     DreamWorldTiers: ["No Preview OU", "No Preview Ubers", "DW LC", "Monotype", "DW UU", "DW LU", "Gen 5 1v1 Ubers", "Gen 5 1v1", "Challenge Cup", "CC 1v1", "DW Uber Triples", "No Preview OU Triples", "No Preview Uber Doubles", "No Preview OU Doubles", "Shanai Cup", "Shanai Cup 1.5", "Shanai Cup STAT", "Original Shanai Cup TEST", "Monocolour", "Clear Skies DW"],
     superAdmins: ["Beast", "zeroality", "TheUnknownOne"],
+    casinoAdmins: [],
     canJoinStaffChannel: ["zerotest"],
     disallowStaffChannel: []
 };
