@@ -255,7 +255,7 @@ module.exports = (new function () {
 			casinobot.sendMessage(src, "You don't have any coins so you are not able to play.", casinochan);
 			return;
 		}
-        if (isNaN(commandData)) {
+        if (isNaN(data[0])) {
 			casinobot.sendMessage(src, "Specify a valid amount of coins.", casinochan);
 			return;
 		}
