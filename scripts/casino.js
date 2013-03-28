@@ -11,10 +11,7 @@ module.exports = (function () {
     var utilities = require('utilities.js'),
         isNonNegative = utilities.is_non_negative;
     
-	var payout, caldice, crapsdice,
-        calnumber, crapsnumber, bet,
-        myCoins, dice1, dice2,
-        dice3, slot, jackpot = 1000,
+	var jackpot = 1000,
         stepTimer = 0;
     
     var cooldowns = [];
@@ -25,6 +22,14 @@ module.exports = (function () {
     this.poker = new (require('poker.js'))(casino);
     
 	this.playCAL = function (src, commandData) {
+        var bet,
+            calnumber,
+            dice1,
+            dice2,
+            dice3,
+            caldice,
+            payout;
+        
 		if (!isNonNegative(casino.coins[src]) || casino.coins[src] <= 0) {
 			casino.coins[src] = 100;
 		}
@@ -83,24 +88,20 @@ module.exports = (function () {
             if (payout >= 400) {
                 casinobot.sendAll(sys.name(src) + " just got a huge payout of " + payout + " coins!!!!");
             }
-            caldice = undefined;
-            dice1 = undefined;
-            dice2 = undefined;
-            dice3 = undefined;
-            crapsnumber = undefined;
-            bet = undefined;
             return;
         } else {
             casinobot.sendMessage(src, "Sorry you rolled a " + caldice + ".  You lost " + bet + " coins!", casinochan);
-            caldice = undefined;
-            dice1 = undefined;
-            dice2 = undefined;
-            dice3 = undefined;
             return;
         }
 	};
     this.playCraps = function (src, commandData) {
-        if (!isNonNegative(casino.coins[src]) || casino.coins[src] <= 0) {
+        var bet,
+            dice1,
+            dice2,
+            crapsdice,
+            payout;
+        
+        if (!casino.coins.hasOwnProperty(src)) {
             casino.coins[src] = 100;
         }
         if (commandData === undefined) {
@@ -149,19 +150,12 @@ module.exports = (function () {
             casinobot.sendMessage(src, "You rolled a " + crapsdice + " and lost " + bet + " coins!", casinochan);
             return;
         }
-        // unreachable, commenting out.
-        /*
-        dice1 = undefined;
-        dice2 = undefined;
-        extra1 = undefined;
-        extra2 = undefined;
-        crapsdice = undefined;
-        */
     };
 	this.playSlots = function (src) {
-		if (!isNonNegative(casino.coins[src]) || casino.coins[src] <= 0) {
-			casino.coins[src] = 100;
-		}
+        var slot;
+		if (!casino.coins.hasOwnProperty(src)) {
+            casino.coins[src] = 100;
+        }
 		if (casino.coins[src] <= 0) {
 			casinobot.sendMessage(src, "You don't have any coins so you are not able to play.", casinochan);
 			return;
@@ -172,7 +166,6 @@ module.exports = (function () {
 			casino.coins[src] += jackpot;
 			casinobot.sendMessage(src, "You hit the jackpot!!!  You got " + jackpot + " coins!", casinochan);
 			casinobot.sendAll(sys.name(src) + " just hit the jackpot and got " + jackpot + " coins in #casino!!!!!");
-			slot = undefined;
 			jackpot = 1000;
 			return;
 		}
@@ -210,8 +203,6 @@ module.exports = (function () {
 			jackpot += 1;
 			return;
 		}
-        // unreachable, commenting out.
-		// slot = undefined;
 	};
     this.showGames = function (src, commandData) {
         var games = [

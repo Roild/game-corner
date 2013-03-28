@@ -20,6 +20,9 @@ module.exports = function (casino) {
     var commands = {
         user: {
             joinp: function (src, data) {
+                if (!casino.coins.hasOwnProperty(src)) {
+                    casino.coins[src] = 100;
+                }
                 if (game.state !== 'signup') {
                     return send(src, "You can't sign up right now. Try later.");
                 }
