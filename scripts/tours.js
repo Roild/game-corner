@@ -855,7 +855,7 @@ function getConfigValue(file, key) {
             errchannel: "Developer's Den",
             tourbotcolour: "#3DAA68",
             minpercent: 5,
-            minplayers: 3,
+            minplayers: 2,
             decayrate: 10,
             decaytime: 2,
             norepeat: 7,
