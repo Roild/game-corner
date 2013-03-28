@@ -1,7 +1,6 @@
 /*jslint es5: true, evil: true, plusplus: true, sloppy: true, vars: true, undef: true*/
 /*global module, require, sys, casinobot, Config*/
 
-// todo turnHelp
 (function () {
     var cards = require('cards.js');
     
@@ -56,27 +55,36 @@ module.exports = function (casino) {
                 }
             },
             leave: function (src, data) {
-                var msg = sys.name(src) + " left.";
+                var name = sys.name(src),
+                    msg = name + " left.",
+                    i;
                 
                 if (game.state === 'none') {
                     return send(src, "No game has started.");
                 }
-                if (game.signups.indexOf(sys.name(src)) !== -1) {
+                if (game.signups.indexOf(name) !== -1) {
                     return send(src, "You've never signed up.");
                 }
                 
-                game.signups.splice(game.signups.indexOf(sys.name(src)), 1);
+                game.signups.splice(game.signups.indexOf(name), 1);
                 game.ips.splice(game.ips.indexOf(sys.ip(src)), 1);
                                 
                 if (game.state === 'signup') {
                     msg += " " + game.ticks + " second(s) left.";
                 } else {
-                    if (sys.name(src) === (playerGet(game.currentPlayer) || {}).name) {
+                    if (name === (playerGet(game.currentPlayer) || {}).name) {
                         nextPlayer();
                     }
                 }
                 
-                delete game.players[g];
+                for (i in game.players) {
+                    if (game.players.hasOwnProperty(i)) {
+                        if (game.players[i].name === name) {
+                            delete game.players[i];
+                            break;
+                        }
+                    }
+                }
                 
                 broadcast(msg);
             },
@@ -338,6 +346,9 @@ module.exports = function (casino) {
             broadcast(playerGet(game.currentPlayer).name + " is not here..");
             return nextPlayer();
         }
+        
+        broadcast("Possible actions:");
+        broadcast("Fold [/fold]");
     }
     
     return {
