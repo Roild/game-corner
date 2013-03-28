@@ -228,7 +228,7 @@ module.exports = (new function () {
     
     
     // Electric [1] Fire [2] Water [3] Grass [4] Psychic [5] Ground [6]
-    this.prNames = "Electric Fire Water Grass Psychic Ground".split(" ");
+    this.prNames = ["Electric", "Fire", "Water", "Grass", "Psychic", "Ground"];
     
     // result can be:
     // 0: win
@@ -236,13 +236,18 @@ module.exports = (new function () {
     // 2: lose
     this.playPR = function (src, commandData) {
         var data = commandData.split(":"),
-            choices = data[1].split("-"),
+            choices = (data[1] || "").split("-"),
             aiChoices,
             name = sys.name(src).toLowerCase(),
             result = 1,
             stats = [0, 0, 0];
         
-        commandData = parseInt(commandData, 10);
+        if (data.length !== 2 || choices.length !== 3) {
+            casinobot.sendMessage(src, "You play it like this: /pr bet:type1-type2-type3");
+            return;
+        }
+        
+        data[0] = parseInt(data[0], 10);
 		if (!casino.coins.hasOwnProperty(name)) {
             casino.coins[name] = 100;
         }
@@ -258,10 +263,6 @@ module.exports = (new function () {
 			casinobot.sendMessage(src, "You don't have that many coins!", casinochan);
 			return;
 		}
-        if (choices.length !== 3) {
-            casinobot.sendMessage(src, "You play it like this: /pr type1-type2-type3");
-            return;
-        }
         
         aiChoices = [sys.rand(1, 7), sys.rand(1, 7), sys.rand(1, 7)];
         
