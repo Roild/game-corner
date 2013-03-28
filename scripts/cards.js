@@ -72,7 +72,7 @@ Card.suitUnicodeStrings = {
 	club:     '♣',
 	spade:    '♠',
 	sword:    '☨',
-	coin      '⚪',
+	coin:      '⚪',
 	cup:      '☕'
 };
 
