@@ -6,6 +6,7 @@
     
     cards.generators.cardHolder = function () {};
     cards.Deck.createType('cardHolder', 'cardHolder');
+    cards.useArc4 = true; // change this if it lags too much
 }());
 
 // implementing Texas Hold'em
@@ -138,14 +139,18 @@ module.exports = function (casino) {
     function gamestate_start() { // when the signups have ended
         var x,
             i,
-            player;
+            player,
+            keys;
         
+        // big/small blind commented out for now.
         game.ticks = -1;
         game.state = 'started';
         game.signups.forEach(function (player) {
             game.players[player.toLowerCase()] = {
                 name: player,
-                deck: new cards.cardHolder()
+                deck: new cards.cardHolder(),
+                // bigBlind: false,
+               // smallBlind: false
             };
         });
         
@@ -157,6 +162,10 @@ module.exports = function (casino) {
                 }
             }
         }
+        
+        //keys = Object.keys(game.players);
+        //game.players[keys[0]].bigBlind = true;
+        //game.players[keys[1]].smallBlind = true;
     }
     
     function gamestate_preflop() {
@@ -178,7 +187,7 @@ module.exports = function (casino) {
     return {
         handleCommand: function (src, message, channel) {
             try {
-                handleCommand(src, message, channel);
+                return handleCommand(src, message, channel);
             } catch (e) {
                 broadcast("Error with poker command " + message.split(' ')[0] + ": " + e + " on " + e.lineNumber + ".");
             }

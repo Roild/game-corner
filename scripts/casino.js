@@ -4,7 +4,7 @@
 module.exports = (function () {
     var casino = this,
         casinochan,
-        casinoCommandCooldown = 5, // in seconds. only applies to cal, craps, and slots.
+        casinoCommandCooldown = 2, // in seconds. only applies to cal, craps, and slots.
         defaultMaster = "BeastCharizard",
         defaultChannel = "Casino";
   
@@ -14,22 +14,24 @@ module.exports = (function () {
 	var payout, caldice, crapsdice,
         calnumber, crapsnumber, bet,
         myCoins, dice1, dice2,
-        dice3, slot, jackpot = 1000;
+        dice3, slot, jackpot = 1000,
+        stepTimer = 0;
     
     var cooldowns = [];
     
-    this.coins = 0;
+    this.memoryHash = new (require('memoryhash.js'))('casino-data.json');
+    this.coins = JSON.parse((casino.memoryHash.get('coins') || "{}"));
     this.chan = undefined;
-    this.poker = new (require('poker.js'))(this);
+    this.poker = new (require('poker.js'))(casino);
     
 	this.playCAL = function (src, commandData) {
-		if (!isNonNegative(SESSION.users(src).coins) || SESSION.users(src).coins <= 0) {
-			SESSION.users(src).coins = 100;
+		if (!isNonNegative(casino.coins[src]) || casino.coins[src] <= 0) {
+			casino.coins[src] = 100;
 		}
 		if (commandData === undefined) {
 			return;
 		}
-		if (SESSION.users(src).coins <= 0) {
+		if (casino.coins[src] <= 0) {
 			casinobot.sendMessage(src, "You don't have any coins so you are not able to play.", casinochan);
 			return;
 		}
@@ -39,7 +41,7 @@ module.exports = (function () {
             casinobot.sendMessage(src, "You use it like /cal [number you are betting]:[number you want to get].", casinochan);
             return;
         }
-        if (SESSION.users(src).coins < bet) {
+        if (casino.coins[src] < bet) {
             casinobot.sendMessage(src, "You don't have enough coins to make that bet.", casinochan);
 			return;
         }
@@ -55,7 +57,7 @@ module.exports = (function () {
         dice1 = Math.floor((Math.random() * 6) + 1);
         dice2 = Math.floor((Math.random() * 6) + 1);
         dice3 = Math.floor((Math.random() * 6) + 1);
-        SESSION.users(src).coins -= bet;
+        casino.coins[src] -= bet;
         caldice = dice1 + dice2 + dice3;
         if (caldice === calnumber) {
             if (calnumber === 3 || calnumber === 18) {
@@ -77,7 +79,7 @@ module.exports = (function () {
             }
             
             casinobot.sendMessage(src, "You rolled a " + caldice + " and matched your number!! You get " + payout + " coins!", casinochan);
-            SESSION.users(src).coins += payout;
+            casino.coins[src] += payout;
             if (payout >= 400) {
                 casinobot.sendAll(sys.name(src) + " just got a huge payout of " + payout + " coins!!!!");
             }
@@ -98,13 +100,13 @@ module.exports = (function () {
         }
 	};
     this.playCraps = function (src, commandData) {
-        if (!isNonNegative(SESSION.users(src).coins) || SESSION.users(src).coins <= 0) {
-            SESSION.users(src).coins = 100;
+        if (!isNonNegative(casino.coins[src]) || casino.coins[src] <= 0) {
+            casino.coins[src] = 100;
         }
         if (commandData === undefined) {
             return;
         }
-        if (SESSION.users(src).coins <= 0) {
+        if (casino.coins[src] <= 0) {
             casinobot.sendMessage(src, "You don't have any coins so you are not able to play.", casinochan);
             return;
         }
@@ -113,7 +115,7 @@ module.exports = (function () {
             casinobot.sendMessage(src, "You use it like /craps [number of coins you are betting].", casinochan);
             return;
         }
-        if (SESSION.users(src).coins < bet) {
+        if (casino.coins[src] < bet) {
             casinobot.sendMessage(src, "You don't have enough coins to make that bet.", casinochan);
             return;
         }
@@ -123,12 +125,12 @@ module.exports = (function () {
         }
         dice1 = Math.floor((Math.random() * 6) + 1);
         dice2 = Math.floor((Math.random() * 6) + 1);
-        SESSION.users(src).coins -= bet;
+        casino.coins[src] -= bet;
         crapsdice = dice1 + dice2;
         if (crapsdice === 7 || crapsdice === 11) {
             payout = bet * 2.5;
             casinobot.sendMessage(src, "You rolled a " + crapsdice + " and got " + payout + " coins!", casinochan);
-            SESSION.users(src).coins += payout;
+            casino.coins[src] += payout;
             return;
         } else if (crapsdice === 4 || crapsdice === 5 || crapsdice === 6 || crapsdice === 8 || crapsdice === 9 || crapsdice === 10) {
             var extra1 = Math.floor((Math.random() * 6) + 1),
@@ -137,7 +139,7 @@ module.exports = (function () {
             if (crapsdice === extra) {
                 payout = bet * 1.75;
                 casinobot.sendMessage(src, "You rolled a " + crapsdice + " and a " + extra + " and got " + payout + " coins!", casinochan);
-                SESSION.users(src).coins += payout;
+                casino.coins[src] += payout;
                 return;
             } else {
                 casinobot.sendMessage(src, "Your two rolls of " + crapsdice + " and " + extra + " didn't match so you lost " + bet + " coins.", casinochan);
@@ -157,17 +159,17 @@ module.exports = (function () {
         */
     };
 	this.playSlots = function (src) {
-		if (!isNonNegative(SESSION.users(src).coins) || SESSION.users(src).coins <= 0) {
-			SESSION.users(src).coins = 100;
+		if (!isNonNegative(casino.coins[src]) || casino.coins[src] <= 0) {
+			casino.coins[src] = 100;
 		}
-		if (SESSION.users(src).coins <= 0) {
+		if (casino.coins[src] <= 0) {
 			casinobot.sendMessage(src, "You don't have any coins so you are not able to play.", casinochan);
 			return;
 		}
-		SESSION.users(src).coins -= 1;
+		casino.coins[src] -= 1;
 		slot = Math.floor((Math.random() * 300) + 1);
 		if (slot === 1) {
-			SESSION.users(src).coins += jackpot;
+			casino.coins[src] += jackpot;
 			casinobot.sendMessage(src, "You hit the jackpot!!!  You got " + jackpot + " coins!", casinochan);
 			casinobot.sendAll(sys.name(src) + " just hit the jackpot and got " + jackpot + " coins in #casino!!!!!");
 			slot = undefined;
@@ -175,31 +177,31 @@ module.exports = (function () {
 			return;
 		}
 		if (slot <= 5) {
-			SESSION.users(src).coins += 150;
+			casino.coins[src] += 150;
 			casinobot.sendMessage(src, "You hit a great number and got 150 coins!!!", casinochan);
 			jackpot += 1;
 			return;
 		}
 		if (slot <= 14) {
-			SESSION.users(src).coins += 100;
+			casino.coins[src] += 100;
 			casinobot.sendMessage(src, "You hit a good number and got 100 coins!!", casinochan);
 			jackpot += 1;
 			return;
 		}
 		if (slot <= 30) {
-			SESSION.users(src).coins += 50;
+			casino.coins[src] += 50;
 			casinobot.sendMessage(src, "You hit an okay number and got 50 coins!", casinochan);
 			jackpot += 1;
 			return;
 		}
 		if (slot <= 53) {
-			SESSION.users(src).coins += 10;
+			casino.coins[src] += 10;
 			casinobot.sendMessage(src, "Your got lucky and won 10 coins.", casinochan);
 			jackpot += 1;
 			return;
 		}
 		if (slot <= 85) {
-			SESSION.users(src).coins += 2;
+			casino.coins[src] += 2;
 			casinobot.sendMessage(src, "You got 2 coins.  It is better than nothing.", casinochan);
 			jackpot += 1;
 			return;
@@ -223,7 +225,7 @@ module.exports = (function () {
         });
     };
     this.showmyCoins = function (src) {
-        myCoins = SESSION.users(src).coins;
+        var myCoins = casino.coins[src];
         casinobot.sendMessage(src, "You have " + myCoins + " coins right now.", casinochan);
         return;
     };
@@ -336,7 +338,6 @@ module.exports = (function () {
             casinochan = sys.createChannel(name);
         }
         casino.chan = casinochan;
-        
         SESSION.global().channelManager.restoreSettings(casinochan);
         SESSION.channels(casinochan).perm = true;
         SESSION.channels(casinochan).master = defaultMaster;
@@ -351,6 +352,12 @@ module.exports = (function () {
         init: casino.init,
         handleCommand: casino.handleCommand,
         beforeChannelJoin: casino.beforeChannelJoin,
-        step: poker.step
+        step: function () {
+            if (++stepTimer % 60) { // every minute
+                casino.memoryHash.add('coins', JSON.stringify(this.coins));
+            }
+            
+            poker.step();
+        }
     };
 }());
