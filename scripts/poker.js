@@ -97,6 +97,10 @@ module.exports = function (casino) {
                 
                 send(src, "Your cards:");
                 send(src, self.deck.cards.map(mapCards).join(" | "));
+            },
+            fold: function (src, data) {
+                if (game.state !== '') {
+                }
             }
         },
         mod: {
@@ -183,7 +187,7 @@ module.exports = function (casino) {
             nextPlayerGetsBigBlind,
             nextPlayerGetsSmallBlind;
         
-        game.deck = new cards.PokerDeck();
+        game.deck.shuffleAll();
         game.communityCards = new cards.Deck();
         game.bet = cards.bigBlind;
         game.currentPlayer = 0;
@@ -194,7 +198,6 @@ module.exports = function (casino) {
                 player = game.players[i];
                 
                 player.deck = new cards.Deck();
-                player.turn = false;
                 
                 if (nextPlayerGetsSmallBlind) {
                     player.smallBlind = true;
@@ -383,8 +386,6 @@ module.exports = function (casino) {
         broadcast("");
         broadcast(playerGet(game.currentPlayer).name + "'s turn ended.");
         
-        playerSet(game.currentPlayer, 'turn', false);
-        
         ++game.currentPlayer;
         
         if (playerGet(game.currentPlayer) === undefined) {
@@ -394,8 +395,6 @@ module.exports = function (casino) {
         
         broadcast("It's " + playerGet(game.currentPlayer).name + "'s turn.");
         broadcast("");
-        
-        playerSet(game.currentPlayer, 'turn', true);
     }
     
     function turnHelp() {
