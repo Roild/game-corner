@@ -1,6 +1,13 @@
 /*jslint es5: true, evil: true, plusplus: true, sloppy: true, vars: true*/
 /*global module, require, sys, casinobot, Config, broadcast, send, gamestate_start, resetGame*/
 
+(function () {
+    var cards = require('cards.js');
+    
+    cards.generators.cardHolder = function () {};
+    cards.Deck.createType('cardHolder', 'cardHolder');
+}());
+
 // implementing Texas Hold'em
 module.exports = function (casino) {
     var cards = require('cards.js'),
@@ -25,14 +32,40 @@ module.exports = function (casino) {
                 
                 game.signups.push(sys.name(src));
                 game.ips.push(sys.ip(src));
-                broadcast(sys.name(src) + " joined! " + game.ticks + " seconds left!");
+                
+                if (game.signups.length === 22) {
+                    game.ticks = 0;
+                }
+                
+                broadcast(sys.name(src) + " joined! " + game.ticks + " second(s) left!");
+                
+                if (game.ticks === 0) {
+                    ++game.ticks;
+                }
+            },
+            cards: function (src, data) {
+                var self,
+                    cards = [];
+                if (game.state !== 'started') {
+                    return send(src, "The game hasn't even started yet.");
+                }
+                if ((self = game.players[sys.name(src).toLowerCase()]) === undefined) {
+                    return send(src, "You never joined the game!");
+                }
+                
+                self.deck.forEach(function (card, index, deck) {
+                    cards.push(card.unicodeString());
+                });
+                
+                send(src, "Your cards:");
+                send(src, cards.join(' | '));
             }
         },
         mod: {
             start: function (src, data) {
                 game.state = 'signup';
                 game.nextState = gamestate_start;
-                game.ticks = 60;
+                game.ticks = 90;
                 
                 broadcast(sys.name(src) + " started a game of Texas Hold'em Poker! Type /joinp to join (you have " + game.ticks + " seconds to join)!");
             },
@@ -83,6 +116,8 @@ module.exports = function (casino) {
             players: {},
             signups: [],
             ips: [],
+            deck: new cards.PokerDeck(),
+            communityCards: new cards.cardHolder(),
             nextState: function () {},
             ticks: 0,
             state: 'none'
@@ -101,12 +136,43 @@ module.exports = function (casino) {
         
     // game states
     function gamestate_start() { // when the signups have ended
+        var x,
+            i,
+            player;
+        
         game.ticks = -1;
+        game.state = 'started';
         game.signups.forEach(function (player) {
-            game.players[player.toLowerCase] = {
-                name: player
-            }
+            game.players[player.toLowerCase()] = {
+                name: player,
+                deck: new cards.cardHolder()
+            };
         });
+        
+        for (x = 0; x < 2; ++x) {
+            for (i in game.players) {
+                if (game.players.hasOwnProperty(i)) {
+                    player = game.players[i];
+                    player.deck.add(game.deck.draw());
+                }
+            }
+        }
+    }
+    
+    function gamestate_preflop() {
+        
+    }
+    
+    function gamestate_flop() {
+        
+    }
+    
+    function gamestate_turn() {
+        
+    }
+    
+    function gamestate_river() {
+        
     }
     
     return {

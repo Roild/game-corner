@@ -1,10 +1,11 @@
+/*jslint es5: true, evil: true, plusplus: true, sloppy: true, vars: true*/
 /*jshint "laxbreak":true,"shadow":true,"undef":true,"evil":true,"trailing":true,"proto":true,"withstmt":true*/
 /*global sys:true, sendChanHtmlAll:true, module:true, SESSION:true, casinochan, casinobot, script, require, kickbot, poker */
 module.exports = (function () {
     var casino = this,
-        casinochan;
-
-    var defaultMaster = "BeastCharizard",
+        casinochan,
+        casinoCommandCooldown = 5, // in seconds. only applies to cal, craps, and slots.
+        defaultMaster = "BeastCharizard",
         defaultChannel = "Casino";
   
     var utilities = require('utilities.js'),
@@ -14,6 +15,8 @@ module.exports = (function () {
         calnumber, crapsnumber, bet,
         myCoins, dice1, dice2,
         dice3, slot, jackpot = 1000;
+    
+    var cooldowns = [];
     
     this.coins = 0;
     this.chan = undefined;
@@ -307,6 +310,17 @@ module.exports = (function () {
             commandData = message.substr(pos + 1);
         } else {
             command = message.substr(0).toLowerCase();
+        }
+        
+        if (['cal', 'craps', 'slots'].indexOf(command) !== -1) {
+            if (cooldowns.indexOf(src) !== -1) {
+                casinobot.sendMessage(src, "Calm that down. We expect you to be a gentleman.", casinochan);
+                return;
+            }
+            cooldowns.push(src);
+            sys.setTimer(function () {
+                cooldowns.splice(cooldowns.indexOf(src), 1);
+            }, casinoCommandCooldown, false);
         }
         
         if (casino.casinocommands.user.hasOwnProperty(command)) { //Ricetip: You will need this block to make commands work.
