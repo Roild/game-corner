@@ -1,6 +1,6 @@
 /*jslint es5: true, evil: true, plusplus: true, sloppy: true, vars: true*/
 /*jshint "laxbreak":true,"shadow":true,"undef":true,"evil":true,"trailing":true,"proto":true,"withstmt":true*/
-/*global sys:true, sendChanHtmlAll:true, module:true, SESSION:true, casinochan, casinobot, script, require, kickbot, poker, bot, staffchannel */
+/*global sys:true, sendChanHtmlAll:true, module:true, SESSION:true, casinobot, script, require, kickbot,bot, staffchannel, sendChanMessage */
 module.exports = (new function () {
     var casino = this,
         casinochan,
@@ -244,41 +244,37 @@ module.exports = (new function () {
             casinobot.sendMessage(src, "To play type /craps [bet].  bet is how many coins you are risking.");
             return;
         } else if (commandData === "slots") {
-            casinobot.sendMessage(src, "To play type /slots. You winning depend on how lucky you are.");
+            casinobot.sendMessage(src, "To play type /slots. You win depend on how lucky you are.");
             return;
         } else {
             var help = [
                 "",
-                "Type /help cal or /help chuck a luck to learn how to play Chuck a Luck.",
-                "Type /help craps to learn how to play Craps.",
-                "Type /help slots to learn how to play Slots.",
-                "",
-                "/cal bet:number To Play Chuck A Luck.",
-                "/craps bet To play Craps",
-                "/games To see all the games you are able to play.",
-                "/mycoins To find out how many coins you have.",
+                "Type /help cal or /help chuck a luck to learn how to play Chuck a Luck. :",
+                "Type /help craps to learn how to play Craps. :",
+                "Type /help slots to learn how to play Slots. ",
                 ""
             ];
             
             help.forEach(function (msg) {
-                casinobot.sendMessage(src, msg, casinochan);
+                sendChanMessage(src, msg, casinochan);
             });
             return;
         }
     };
     this.showCommands = function (src, commandData) {
         var some = [
-            "Commands:",
-            "/cal bet:number  To Play Chuck A Luck.",
-            "/craps bet  To play Craps",
-            "/help To learn how to play the games.",
-            "/games To see all the games you are able to play.",
-            "/mycoins To find out how many coins you have."
+            "*** Commands: ***",
+            "cal [bet:number]: To play Chuck A Luck.",
+            "craps [bet]: To play Craps.",
+            "slots: To play Slots.",
+            "help: To learn how to play the games.",
+            "games: To see all the games you are able to play.",
+            "mycoins: To find out how many coins you have."
 		];
         
         some.forEach(function (msg) {
             try {
-                casinobot.sendMessage(src, msg, casinochan);
+                sendChanMessage(src, msg, casinochan);
             } catch (err) {
                 kickbot.sendAll("Error: " + err);
             }
