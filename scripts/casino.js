@@ -19,7 +19,7 @@ module.exports = (function () {
     //this.memoryHash = new (require('memoryhash.js'))('casino-data.json');
     this.coins = {};//JSON.parse((casino.memoryHash.get('coins') || "{}"));
     this.chan = undefined;
-    this.poker = new (require('poker.js'))(casino);
+   // this.poker = new (require('poker.js'))(casino);
     
 	this.playCAL = function (src, commandData) {
         var bet,
