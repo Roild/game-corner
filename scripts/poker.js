@@ -8,6 +8,7 @@
     cards.raiseLimit = 50; // limit for raising
     cards.bigBlind = 5; // price of the big blind
     cards.smallBlind = 3; // price of the small blind
+    cards.roundLimit = 10; // amount of rounds per poker game
 }());
 
 // implementing Texas Hold'em
@@ -95,7 +96,7 @@ module.exports = function (casino) {
                 }
                 
                 send(src, "Your cards:");
-                send(src, self.deck.cards[0].unicodeString() + " | " + self.deck.cards[1].unicodeString());
+                send(src, self.deck.cards.map(mapCards).join(" | "));
             }
         },
         mod: {
@@ -178,7 +179,9 @@ module.exports = function (casino) {
     
     function newRound() {
         var i,
-            player;
+            player,
+            nextPlayerGetsBigBlind,
+            nextPlayerGetsSmallBlind;
         
         game.deck = new cards.PokerDeck();
         game.communityCards = new cards.Deck();
@@ -192,12 +195,32 @@ module.exports = function (casino) {
                 
                 player.deck = new cards.Deck();
                 player.turn = false;
-                player.bigBlind = false;
-                player.smallBlind = false;
+                
+                if (nextPlayerGetsSmallBlind) {
+                    player.smallBlind = true;
+                    player.bigBlind = false;
+                    nextPlayerGetsSmallBlind = false;
+                } else if (nextPlayerGetsBigBlind) {
+                    nextPlayerGetsSmallBlind = true;
+                    player.bigBlind = true;
+                    player.smallBlind = false;
+                    nextPlayerGetsBigBlind = false;
+                } else if (player.bigBlind) {
+                    nextPlayerGetsBigBlind = true;
+                    player.bigBlind = false;
+                    player.smallBlind = false;
+                }
             }
         }
         
-        if (game.round === 11) {
+        if (nextPlayerGetsBigBlind) {
+            playerSet(0, 'bigBlind', true);
+            playerSet(1, 'smallBlind', true);
+        } else if (nextPlayerGetsSmallBlind) {
+            playerSet(0, 'smallBlind', true);
+        }
+        
+        if (game.round === (cards.roundLimit + 1)) {
             broadcast("Stopping this game of poker: 10 rounds have been played.");
             broadcast("Ask a moderator to start another game.");
             return 'stop';
@@ -217,13 +240,18 @@ module.exports = function (casino) {
             game.players[player.toLowerCase()] = {
                 name: player,
                 deck: new cards.Deck(),
-                turn: false,
                 bigBlind: false,
                 smallBlind: false
             };
         });
         
+        playerSet(0, 'bigBlind', true);
+        playerSet(1, 'smallBlind', true);
         gamestate_start();
+    }
+    
+    function mapCards(card) {
+        return card.unicodeString();
     }
     
     function step() {
@@ -240,26 +268,32 @@ module.exports = function (casino) {
     function gamestate_start() {
         var x,
             i,
-            player;
+            player,
+            bigBlind,
+            smallBlind;
         
         for (x = 0; x < 2; ++x) {
             for (i in game.players) {
                 if (game.players.hasOwnProperty(i)) {
                     player = game.players[i];
                     player.deck.add(game.deck.draw());
+                    
+                    if (player.bigBlind) {
+                        bigBlind = player;
+                    } else if (player.smallBlind) {
+                        smallBlind = player;
+                    }
                 }
             }
         }
         
-        playerSet(0, 'bigBlind', true);
-        playerSet(1, 'smallBlind', true);
-        casino.coins[playerGet(0).name] -= cards.bigBlind;
-        casino.coins[playerGet(1).name] -= cards.smallBlind;
+        casino.coins[bigBlind.name] -= cards.bigBlind;
+        casino.coins[smallBlind.name] -= cards.smallBlind;
         
         broadcast("");
         broadcast("There are " + Object.keys(game.players).length + " players [" + game.signups.join(', ') + "].");
-        broadcast(playerGet(0).name + " has the big blind [5 coins].");
-        broadcast(playerGet(1).name + " has the small blind [3 coins].");
+        broadcast(bigBlind.name + " has the big blind [" + cards.bigBlind + " coins].");
+        broadcast(smallBlind.name + " has the small blind [" + cards.smallBlind + " coins].");
         broadcast("There are " + game.pot + " coins in the pot.");
         broadcast("The raise limit is " + cards.raiseLimit + ".");
         broadcast("");
@@ -270,7 +304,7 @@ module.exports = function (casino) {
                 if (sys.id(player.name) !== undefined) {
                     send(sys.id(player.name), "You currently have " + casino.coins[player.name.toLowerCase()] + " coins.");
                     send(sys.id(player.name), "Your cards [type /cards to see them again]:");
-                    send(sys.id(player.name), player.deck.cards[0].unicodeString() + " | " + player.deck.cards[1].unicodeString());
+                    send(sys.id(player.name), player.deck.cards.map(mapCards).join(" | "));
                 }
             }
         }
@@ -280,8 +314,6 @@ module.exports = function (casino) {
     }
     
     function gamestate_preflop() {
-        playerSet(0, 'turn', true);
-        
         broadcast("");
         broadcast("State: Pre-Flop");
         broadcast("It's " + playerGet(0).name + "'s turn.");
@@ -292,8 +324,13 @@ module.exports = function (casino) {
     }
     
     function gamestate_flop() {
-        playerSet(0, 'turn', true);
+        game.deck.draw(3).forEach(function (card) {
+            game.communityCards.add(card);
+        });
         
+        broadcast("");
+        broadcast("Community Cards:");
+        broadcast(game.communityCards.cards.map(mapCards).join(" | "));
         broadcast("");
         broadcast("State: Flop");
         broadcast("It's " + playerGet(0).name + "'s turn.");
@@ -304,8 +341,11 @@ module.exports = function (casino) {
     }
     
     function gamestate_turn() {
-        playerSet(0, 'turn', true);
-        
+        game.communityCards.add(game.deck.draw());
+                
+        broadcast("");
+        broadcast("Community Cards:");
+        broadcast(game.communityCards.cards.map(mapCards).join(" | "));
         broadcast("");
         broadcast("State: Turn");
         broadcast("It's " + playerGet(0).name + "'s turn.");
@@ -316,8 +356,11 @@ module.exports = function (casino) {
     }
     
     function gamestate_river() {
-        playerSet(0, 'turn', true);
+        game.communityCards.add(game.deck.draw());
         
+        broadcast("");
+        broadcast("Community Cards:");
+        broadcast(game.communityCards.cards.map(mapCards).join(" | "));
         broadcast("");
         broadcast("State: River");
         broadcast("It's " + playerGet(0).name + "'s turn.");
@@ -331,6 +374,9 @@ module.exports = function (casino) {
         if (newRound() === 'stop') {
             return;
         }
+        
+        game.nextState = gamestate_start;
+        game.nextState();
     }
     
     function nextPlayer() {
@@ -353,15 +399,21 @@ module.exports = function (casino) {
     }
     
     function turnHelp() {
-        var id = sys.id(playerGet(game.currentPlayer).name);
+        var id = sys.id(playerGet(game.currentPlayer).name),
+            actions = [];
         
         if (id === undefined || !sys.isInChannel(id, casino.chan)) {
             broadcast(playerGet(game.currentPlayer).name + " is not here..");
             return nextPlayer();
         }
         
+        if (action) {
+        }
+        
+        actions.push("Fold [/fold]");
+        
         broadcast("Possible actions:");
-        broadcast("Fold [/fold]");
+        broadcast("Open [/open] | Call [/call] | Check [/check] | Raise [/raise] | Fold [/fold]");
     }
     
     return {
