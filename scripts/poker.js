@@ -199,6 +199,16 @@ module.exports = function (casino) {
                 player.smallBlind = false;
             }
         }
+        
+        if (game.round === 11) {
+            broadcast("Stopping this game of poker: 10 rounds have been played.");
+            broadcast("Ask a moderator to start another game.");
+            return 'stop';
+        }
+        
+        broadcast("");
+        broadcast("Starting round #" + game.round + ".");
+        broadcast("");
     }
      
     function gameStart() {
@@ -317,7 +327,9 @@ module.exports = function (casino) {
     }
     
     function gamestate_end() {
-        newRound();
+        if (newRound() === 'stop') {
+            return;
+        }
     }
     
     function nextPlayer() {

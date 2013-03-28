@@ -12,9 +12,8 @@ module.exports = (new function () {
         isNonNegative = utilities.is_non_negative;
     
 	var jackpot = 1000,
-        stepTimer = 0;
-    
-    var cooldowns = [];
+        stepTimer = 0,
+        cooldowns = {};
     
     //this.memoryHash = new (require('memoryhash.js'))('casino-data.json');
     this.coins = {};//JSON.parse((casino.memoryHash.get('coins') || "{}"));
@@ -311,13 +310,13 @@ module.exports = (new function () {
             return true;
         }
         if (['cal', 'craps', 'slots'].indexOf(command) !== -1) {
-            if (cooldowns.indexOf(src) !== -1) {
+            if (cooldowns[src]) {
                 casinobot.sendMessage(src, "Don't be so eager to lose all your coins!", casinochan);
                 return;
             }
-            cooldowns.push(src);
+            cooldowns[src] = true;
             sys.setTimer(function () {
-                cooldowns.splice(cooldowns.indexOf(src), 1);
+                delete cooldowns[src];
             }, casinoCommandCooldown, false);
         }
         
