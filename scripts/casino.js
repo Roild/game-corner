@@ -1,7 +1,7 @@
 /*jslint es5: true, evil: true, plusplus: true, sloppy: true, vars: true*/
 /*jshint "laxbreak":true,"shadow":true,"undef":true,"evil":true,"trailing":true,"proto":true,"withstmt":true*/
 /*global sys:true, sendChanHtmlAll:true, module:true, SESSION:true, casinochan, casinobot, script, require, kickbot, poker, bot, staffchannel */
-module.exports = (function () {
+module.exports = (new function () {
     var casino = this,
         casinochan,
         casinoCommandCooldown = 2, // in seconds. only applies to cal, craps, and slots.
@@ -9,7 +9,6 @@ module.exports = (function () {
         defaultChannel = "Casino";
   
     var utilities = require('utilities.js'),
- //       Poker = require('poker.js'),
         isNonNegative = utilities.is_non_negative;
     
 	var jackpot = 1000,
@@ -21,8 +20,8 @@ module.exports = (function () {
     this.coins = {};//JSON.parse((casino.memoryHash.get('coins') || "{}"));
     this.chan = undefined;
     
- /*   try {
-        this.poker = new Poker(casino);
+    try {
+        this.poker = new (require('poker.js'))(casino);
     } catch (e) {
         if (staffchannel) {
             bot.sendAll("Couldn't load poker: " + e, staffchannel);
@@ -30,7 +29,7 @@ module.exports = (function () {
         
         this.poker = {handleCommand: function () {}, step: function () {}};
     }
-   */ 
+    
 	this.playCAL = function (src, commandData) {
         var bet,
             calnumber,
@@ -303,10 +302,9 @@ module.exports = (function () {
         if (channel !== casinochan) {
             return;
         }
-        
-      //  if (this.poker.handleCommand(src, message, channel) === true) {
-        //    return true;
-       // }
+        if (casino.poker.handleCommand(src, message, channel) === true) {
+            return true;
+        }
         
         if (pos !== -1) {
             command = message.substring(0, pos).toLowerCase();
@@ -358,7 +356,7 @@ module.exports = (function () {
               //  casino.memoryHash.add('coins', JSON.stringify(this.coins));
             //}
             
-           // this.poker.step();
+            casino.poker.step();
         }
     };
 }());

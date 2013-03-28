@@ -1,5 +1,5 @@
 // from: https://raw.github.com/kbjr/node-rand-utils/master/lib/rand.js
-
+var global = this;
 /**
  * Randomization module
  *
@@ -160,7 +160,7 @@ module.exports.arc4 = (function (pool, math, width, chunks, significance, overfl
 		seed = mixkey(flatten(
 			use_entropy ? [seed, pool] :
 			arguments.length ? seed :
-			[new Date().getTime(), pool, window], 3), key);
+			[new Date().getTime(), pool, global], 3), key);
 		arc4 = new ARC4(key);
 		mixkey(arc4.S, pool);
 

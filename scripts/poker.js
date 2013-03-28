@@ -137,8 +137,8 @@ module.exports = function (casino) {
             throw "invalid command";
         }
         
-        if (commands.user.hasOwnProperty(command)) {
-            commands.user[command].call(module_scope, src, commandData);
+        if (commands.mod.hasOwnProperty(command)) {
+            commands.mod[command].call(module_scope, src, commandData);
             return true;
         }
     }
@@ -356,7 +356,9 @@ module.exports = function (casino) {
             try {
                 return handleCommand(src, message, channel);
             } catch (e) {
-                broadcast("Error with poker command " + message.split(' ')[0] + ": " + e + " on " + e.lineNumber + ".");
+                if (e !== "invalid command") {
+                    broadcast("Error with poker command " + message.split(' ')[0] + ": " + e + " on " + e.lineNumber + ".");
+                }
             }
         },
         step: step
