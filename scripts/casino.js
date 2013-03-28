@@ -1,6 +1,6 @@
 /*jslint es5: true, evil: true, plusplus: true, sloppy: true, vars: true*/
 /*jshint "laxbreak":true,"shadow":true,"undef":true,"evil":true,"trailing":true,"proto":true,"withstmt":true*/
-/*global sys:true, sendChanHtmlAll:true, module:true, SESSION:true, casinobot, script, require, kickbot,bot, staffchannel, sendChanMessage */
+/*global sys:true, sendChanHtmlAll:true, module:true, SESSION:true, casinobot, script, require, bot, staffchannel, sendChanMessage */
 module.exports = (new function () {
     var casino = this,
         casinochan,
@@ -262,21 +262,17 @@ module.exports = (new function () {
     };
     this.showCommands = function (src, commandData) {
         var some = [
-            "*** Commands: ***",
-            "cal [bet:number]: To play Chuck A Luck.",
-            "craps [bet]: To play Craps.",
-            "slots: To play Slots.",
-            "help: To learn how to play the games.",
-            "games: To see all the games you are able to play.",
-            "mycoins: To find out how many coins you have."
+            "*** CASINO Commands ***",
+            "/cal [bet:number]: To play Chuck A Luck.",
+            "/craps [bet]: To play Craps.",
+            "/slots: To play Slots.",
+            "/help: To learn how to play the games.",
+            "/games: To see all the games you are able to play.",
+            "/mycoins: To find out how many coins you have."
 		];
         
         some.forEach(function (msg) {
-            try {
-                sendChanMessage(src, msg, casinochan);
-            } catch (err) {
-                kickbot.sendAll("Error: " + err);
-            }
+            sendChanMessage(src, msg, casinochan);
         });
 	};
     this.casinocommands = {
