@@ -9,7 +9,7 @@ module.exports = (function () {
         defaultChannel = "Casino";
   
     var utilities = require('utilities.js'),
-        Poker = require('poker.js'),
+ //       Poker = require('poker.js'),
         isNonNegative = utilities.is_non_negative;
     
 	var jackpot = 1000,
@@ -21,14 +21,14 @@ module.exports = (function () {
     this.coins = {};//JSON.parse((casino.memoryHash.get('coins') || "{}"));
     this.chan = undefined;
     
-    try {
+ /*   try {
         this.poker = new Poker(casino);
     } catch (e) {
         if (staffchannel) {
             bot.sendAll("Couldn't load poker: " + e, staffchannel);
         }
     }
-    
+   */ 
 	this.playCAL = function (src, commandData) {
         var bet,
             calnumber,
