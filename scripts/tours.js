@@ -4709,7 +4709,7 @@ function calcPercentage() { // calc percentage of players in tournaments playing
 
 function sendWelcomeMessage(src, chan) {
     sys.sendMessage(src,border,chan);
-    sys.sendMessage(src,"*** Welcome to #"+tourconfig.channel+"; Version "+tourconfig.version+"! ***",chan);
+    sys.sendMessage(src,"*** Welcome to #"+tourconfig.channel+"! ***",chan);
     var now = new Date();
     var datestring = now.getUTCDate()+"-"+(now.getUTCMonth()+1)+"-"+now.getUTCFullYear();
     var tomorrow = new Date();
