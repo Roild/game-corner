@@ -234,7 +234,9 @@ module.exports = (new function () {
         return;
     };
     this.showHelp = function (src, commandData) {
-        commandData = commandData.toLowerCase();
+        if (commandData) {
+            commandData = commandData.toLowerCase();
+        }
         if (commandData === "chuck" || commandData === "cal" || commandData === "chuck a luck") {
             casinobot.sendMessage(src, "To play type /cal [bet]:[number you are trying to hit]. bet is how many coins you are risking and number is the number you are trying to roll.", casinochan);
             return;
