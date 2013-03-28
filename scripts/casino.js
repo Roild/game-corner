@@ -9,6 +9,7 @@ module.exports = (new function () {
         defaultChannel = "Casino";
   
     var utilities = require('utilities.js'),
+        Poker = require('poker.js'),
         isNonNegative = utilities.is_non_negative;
     
 	var jackpot = 1000,
@@ -20,7 +21,7 @@ module.exports = (new function () {
     this.chan = undefined;
     
     try {
-        this.poker = new (require('poker.js'))(casino);
+        this.poker = new Poker(casino);
     } catch (e) {
         if (staffchannel) {
             bot.sendAll("Couldn't load poker: " + e, staffchannel);
@@ -28,6 +29,10 @@ module.exports = (new function () {
         
         this.poker = {handleCommand: function () {}, step: function () {}};
     }
+    
+    this.getCoins = function (src) {
+        return casino.coins[sys.name(src).toLowerCase()];
+    };
     
 	this.playCAL = function (src, commandData) {
         var bet,
@@ -165,8 +170,7 @@ module.exports = (new function () {
             casino.coins[sys.name(src).toLowerCase()] = 100;
         }
 		if (casino.coins[sys.name(src).toLowerCase()] <= 0) {
-			casinobot.sendMessage(src, "You don't have any coins so you are not able to play.", casinochan);
-			return;
+			casino.coins[sys.name(src).toLowerCase()] = 1;
 		}
 		casino.coins[sys.name(src).toLowerCase()] -= 1;
 		slot = Math.floor((Math.random() * 300) + 1);
@@ -212,11 +216,100 @@ module.exports = (new function () {
 			return;
 		}
 	};
+    
+    this.prTable = [
+        [1, 1, 0, 2, 0, 2],
+        [1, 1, 2, 0, 2, 0],
+        [2, 0, 1, 2, 1, 0],
+        [0, 2, 0, 1, 2, 1],
+        [2, 2, 1, 0, 1, 0],
+        [0, 0, 2, 1, 2, 1]
+    ];
+    
+    
+    // Electric [1] Fire [2] Water [3] Grass [4] Psychic [5] Ground [6]
+    this.prNames = "Electric Fire Water Grass Psychic Ground".split(" ");
+    
+    // result can be:
+    // 0: win
+    // 1: tie
+    // 2: lose
+    this.playPR = function (src, commandData) {
+        var data = commandData.split(":"),
+            choices = data[1].split("-"),
+            aiChoices,
+            name = sys.name(src).toLowerCase(),
+            result = 1,
+            stats = [0, 0, 0];
+        
+        commandData = parseInt(commandData, 10);
+		if (!casino.coins.hasOwnProperty(name)) {
+            casino.coins[name] = 100;
+        }
+		if (casino.coins[name] <= 0) {
+			casinobot.sendMessage(src, "You don't have any coins so you are not able to play.", casinochan);
+			return;
+		}
+        if (isNaN(commandData)) {
+			casinobot.sendMessage(src, "Specify a valid amount of coins.", casinochan);
+			return;
+		}
+        if (commandData > casino.coins[name]) {
+			casinobot.sendMessage(src, "You don't have that many coins!", casinochan);
+			return;
+		}
+        if (choices.length !== 3) {
+            casinobot.sendMessage(src, "You play it like this: /pr type1-type2-type3");
+            return;
+        }
+        
+        aiChoices = [sys.rand(1, 7), sys.rand(1, 7), sys.rand(1, 7)];
+        
+        casinobot.sendMessage(src, "Your choices: " + choices.map(function (choice) {
+            return this.prNames[parseInt(choice, 10) - 1] || "error";
+        }).join(" | "));
+        casinobot.sendMessage(src, "Pikachu's choices: " + aiChoices.map(function (choice) {
+            return this.prNames[choice - 1];
+        }).join(" | "));
+        
+        choices.forEach(function (choice, index, choices) {
+            var result;
+            if (!isNaN(parseInt(choice, 10))) {
+                casinobot.sendMessage(src, "Choice " + (index + 1) + " is not valid (all choices are numbers and separated with -). Choices are:");
+                return casinobot.sendMessage(src, "Electric [1] | Fire [2] | Water [3] | Grass [4] | Psychic [5] | Ground [6]");
+            }
+            
+            result = this.prTable[aiChoices[index]][parseInt(choice, 10)];
+            
+            switch (result) {
+            case 0:
+                ++stats[0]; // win
+                break;
+            case 1:
+                ++stats[1]; // tie
+                break;
+            case 2:
+                ++stats[2]; // lose
+                break;
+            }
+        });
+        
+        if (stats[0] > 1) {
+            casinobot.sendMessage(src, "You won! Enjoy " + (Math.floor(data[0] * 1.7)) + " coins!");
+            casino.coins[name] += Math.floor(data[0] * 1.7);
+        } else if (stats[1] > 1) {
+            casinobot.sendMessage(src, "You tied! Try again.");
+        } else {
+            casinobot.sendMessage(src, "You lost! There goes " + data[0] + " coins. :(");
+            casino.coins[name] -= data[0];
+        }
+    };
     this.showGames = function (src, commandData) {
         var games = [
             "Chuck-a-luck - Choose any number that 3 dice can make.  If the dice come up with your number you win.",
             "Craps - Roll the dice if you roll 7 or 11 you get 5 times your bet. Roll a 4, 5, 6, 8, 9, or 10 then roll another pair of dice and if they number match you get double your bet. Roll 2 or 12 and you lose.",
-            "Slots - Press your luck with this game.  You better hope your lucky number comes up."
+            "Slots - Press your luck with this game.  You better hope your lucky number comes up.",
+            "Pikachu's Roulette - Defeat Pikachu with types. See http://gamecorner.info/Thread-Game-Pikachu-s-Roulette for more information."
         ];
         
         games.forEach(function (msg) {
@@ -245,19 +338,22 @@ module.exports = (new function () {
         } else if (commandData === "slots") {
             casinobot.sendMessage(src, "To play type /slots. You win depend on how lucky you are.");
             return;
+        } else if (commandData === "pr") {
+            casinobot.sendMessage(src, "To play type /pr [bet]:[choice1-choice2-choice3]. See http://gamecorner.info/Thread-Game-Pikachu-s-Roulette for more info.");
+            return;
         } else {
             var help = [
                 "",
                 "Type /help cal or /help chuck a luck to learn how to play Chuck a Luck. :",
                 "Type /help craps to learn how to play Craps. :",
-                "Type /help slots to learn how to play Slots. ",
+                "Type /help slots to learn how to play Slots. :",
+                "Type /help pr to learn how to play Pikachu's Roulette. :",
                 ""
             ];
             
-            help.forEach(function (msg) {
+            return help.forEach(function (msg) {
                 sendChanMessage(src, msg, casinochan);
             });
-            return;
         }
     };
     this.showCommands = function (src, commandData) {
@@ -266,6 +362,7 @@ module.exports = (new function () {
             "/cal [bet:number]: To play Chuck A Luck.",
             "/craps [bet]: To play Craps.",
             "/slots: To play Slots.",
+            "/pr [bet]:[choice1-choice2-choice3]: To play Pikachu's Roulette.",
             "/help: To learn how to play the games.",
             "/games: To see all the games you are able to play.",
             "/mycoins: To find out how many coins you have."
@@ -277,9 +374,10 @@ module.exports = (new function () {
 	};
     this.casinocommands = {
         user: {
-            cal: [this.playCAL, "To play Chuck A Luck. Used like /cal bet:number"],
-            craps: [this.playCraps, "To play Craps. Used like /craps bet"],
-	        slots: [this.playSlots, "To play the slots. Used like /slots"],
+            cal: [this.playCAL, "To play Chuck A Luck."],
+            craps: [this.playCraps, "To play Craps."],
+	        slots: [this.playSlots, "To play Slots."],
+            pr: [this.playPR, "To play Pikachu's Roulette."],
             help: [this.showHelp, "To learn how to play the games."],
             games: [this.showGames, "To see all the games you can play."],
             jackpot: [this.showJackpot, "To see what the current jackpot is."],
