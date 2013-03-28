@@ -1,6 +1,6 @@
 /*jslint es5: true, evil: true, plusplus: true, sloppy: true, vars: true*/
 /*jshint "laxbreak":true,"shadow":true,"undef":true,"evil":true,"trailing":true,"proto":true,"withstmt":true*/
-/*global sys:true, sendChanHtmlAll:true, module:true, SESSION:true, casinochan, casinobot, script, require, kickbot, poker */
+/*global sys:true, sendChanHtmlAll:true, module:true, SESSION:true, casinochan, casinobot, script, require, kickbot, poker, bot, staffchannel */
 module.exports = (function () {
     var casino = this,
         casinochan,
@@ -9,6 +9,7 @@ module.exports = (function () {
         defaultChannel = "Casino";
   
     var utilities = require('utilities.js'),
+        Poker = require('poker.js'),
         isNonNegative = utilities.is_non_negative;
     
 	var jackpot = 1000,
@@ -19,7 +20,14 @@ module.exports = (function () {
     //this.memoryHash = new (require('memoryhash.js'))('casino-data.json');
     this.coins = {};//JSON.parse((casino.memoryHash.get('coins') || "{}"));
     this.chan = undefined;
-   // this.poker = new (require('poker.js'))(casino);
+    
+    try {
+        this.poker = new Poker(casino);
+    } catch (e) {
+        if (staffchannel) {
+            bot.sendAll("Couldn't load poker: " + e, staffchannel);
+        }
+    }
     
 	this.playCAL = function (src, commandData) {
         var bet,
