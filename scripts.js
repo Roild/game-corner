@@ -21,7 +21,7 @@ var Config = {
     hangbot: "Unown",
     bfbot: "Deoxys",
     // suspectvoting.js available, but not in use
-    Plugins: ["mafia.js", "amoebagame.js", "tournaments.js", "tourstats.js", "trivia.js", "tours.js", "newtourstats.js", "auto_smute.js", "battlefactory.js", "hangman.js", "casino.js"],
+    Plugins: ["mafia.js", "amoebagame.js", "tournaments.js", "tourstats.js", "trivia.js", "tours.js", "newtourstats.js", "auto_smute.js", "battlefactory.js", "hangman.js", "casino.js", "poker.js", "cards.js", "rand-utils.js"],
     Mafia: {
         bot: "Murkrow",
         norepeat: 11,

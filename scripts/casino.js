@@ -30,13 +30,13 @@ module.exports = (function () {
             caldice,
             payout;
         
-		if (!isNonNegative(casino.coins[src]) || casino.coins[src] <= 0) {
-			casino.coins[src] = 100;
+		if (!isNonNegative(casino.coins[sys.name(src).toLowerCase()]) || casino.coins[sys.name(src).toLowerCase()] <= 0) {
+			casino.coins[sys.name(src).toLowerCase()] = 100;
 		}
 		if (commandData === undefined) {
 			return;
 		}
-		if (casino.coins[src] <= 0) {
+		if (casino.coins[sys.name(src).toLowerCase()] <= 0) {
 			casinobot.sendMessage(src, "You don't have any coins so you are not able to play.", casinochan);
 			return;
 		}
@@ -46,7 +46,7 @@ module.exports = (function () {
             casinobot.sendMessage(src, "You use it like /cal [number you are betting]:[number you want to get].", casinochan);
             return;
         }
-        if (casino.coins[src] < bet) {
+        if (casino.coins[sys.name(src).toLowerCase()] < bet) {
             casinobot.sendMessage(src, "You don't have enough coins to make that bet.", casinochan);
 			return;
         }
@@ -62,7 +62,7 @@ module.exports = (function () {
         dice1 = Math.floor((Math.random() * 6) + 1);
         dice2 = Math.floor((Math.random() * 6) + 1);
         dice3 = Math.floor((Math.random() * 6) + 1);
-        casino.coins[src] -= bet;
+        casino.coins[sys.name(src).toLowerCase()] -= bet;
         caldice = dice1 + dice2 + dice3;
         if (caldice === calnumber) {
             if (calnumber === 3 || calnumber === 18) {
@@ -84,7 +84,7 @@ module.exports = (function () {
             }
             
             casinobot.sendMessage(src, "You rolled a " + caldice + " and matched your number!! You get " + payout + " coins!", casinochan);
-            casino.coins[src] += payout;
+            casino.coins[sys.name(src).toLowerCase()] += payout;
             if (payout >= 400) {
                 casinobot.sendAll(sys.name(src) + " just got a huge payout of " + payout + " coins!!!!");
             }
@@ -102,12 +102,12 @@ module.exports = (function () {
             payout;
         
         if (!casino.coins.hasOwnProperty(src)) {
-            casino.coins[src] = 100;
+            casino.coins[sys.name(src).toLowerCase()] = 100;
         }
         if (commandData === undefined) {
             return;
         }
-        if (casino.coins[src] <= 0) {
+        if (casino.coins[sys.name(src).toLowerCase()] <= 0) {
             casinobot.sendMessage(src, "You don't have any coins so you are not able to play.", casinochan);
             return;
         }
@@ -116,7 +116,7 @@ module.exports = (function () {
             casinobot.sendMessage(src, "You use it like /craps [number of coins you are betting].", casinochan);
             return;
         }
-        if (casino.coins[src] < bet) {
+        if (casino.coins[sys.name(src).toLowerCase()] < bet) {
             casinobot.sendMessage(src, "You don't have enough coins to make that bet.", casinochan);
             return;
         }
@@ -126,12 +126,12 @@ module.exports = (function () {
         }
         dice1 = Math.floor((Math.random() * 6) + 1);
         dice2 = Math.floor((Math.random() * 6) + 1);
-        casino.coins[src] -= bet;
+        casino.coins[sys.name(src).toLowerCase()] -= bet;
         crapsdice = dice1 + dice2;
         if (crapsdice === 7 || crapsdice === 11) {
             payout = bet * 2.5;
             casinobot.sendMessage(src, "You rolled a " + crapsdice + " and got " + payout + " coins!", casinochan);
-            casino.coins[src] += payout;
+            casino.coins[sys.name(src).toLowerCase()] += payout;
             return;
         } else if (crapsdice === 4 || crapsdice === 5 || crapsdice === 6 || crapsdice === 8 || crapsdice === 9 || crapsdice === 10) {
             var extra1 = Math.floor((Math.random() * 6) + 1),
@@ -140,7 +140,7 @@ module.exports = (function () {
             if (crapsdice === extra) {
                 payout = bet * 1.75;
                 casinobot.sendMessage(src, "You rolled a " + crapsdice + " and a " + extra + " and got " + payout + " coins!", casinochan);
-                casino.coins[src] += payout;
+                casino.coins[sys.name(src).toLowerCase()] += payout;
                 return;
             } else {
                 casinobot.sendMessage(src, "Your two rolls of " + crapsdice + " and " + extra + " didn't match so you lost " + bet + " coins.", casinochan);
@@ -154,47 +154,47 @@ module.exports = (function () {
 	this.playSlots = function (src) {
         var slot;
 		if (!casino.coins.hasOwnProperty(src)) {
-            casino.coins[src] = 100;
+            casino.coins[sys.name(src).toLowerCase()] = 100;
         }
-		if (casino.coins[src] <= 0) {
+		if (casino.coins[sys.name(src).toLowerCase()] <= 0) {
 			casinobot.sendMessage(src, "You don't have any coins so you are not able to play.", casinochan);
 			return;
 		}
-		casino.coins[src] -= 1;
+		casino.coins[sys.name(src).toLowerCase()] -= 1;
 		slot = Math.floor((Math.random() * 300) + 1);
 		if (slot === 1) {
-			casino.coins[src] += jackpot;
+			casino.coins[sys.name(src).toLowerCase()] += jackpot;
 			casinobot.sendMessage(src, "You hit the jackpot!!!  You got " + jackpot + " coins!", casinochan);
 			casinobot.sendAll(sys.name(src) + " just hit the jackpot and got " + jackpot + " coins in #casino!!!!!");
 			jackpot = 1000;
 			return;
 		}
 		if (slot <= 5) {
-			casino.coins[src] += 150;
+			casino.coins[sys.name(src).toLowerCase()] += 150;
 			casinobot.sendMessage(src, "You hit a great number and got 150 coins!!!", casinochan);
 			jackpot += 1;
 			return;
 		}
 		if (slot <= 14) {
-			casino.coins[src] += 100;
+			casino.coins[sys.name(src).toLowerCase()] += 100;
 			casinobot.sendMessage(src, "You hit a good number and got 100 coins!!", casinochan);
 			jackpot += 1;
 			return;
 		}
 		if (slot <= 30) {
-			casino.coins[src] += 50;
+			casino.coins[sys.name(src).toLowerCase()] += 50;
 			casinobot.sendMessage(src, "You hit an okay number and got 50 coins!", casinochan);
 			jackpot += 1;
 			return;
 		}
 		if (slot <= 53) {
-			casino.coins[src] += 10;
+			casino.coins[sys.name(src).toLowerCase()] += 10;
 			casinobot.sendMessage(src, "Your got lucky and won 10 coins.", casinochan);
 			jackpot += 1;
 			return;
 		}
 		if (slot <= 85) {
-			casino.coins[src] += 2;
+			casino.coins[sys.name(src).toLowerCase()] += 2;
 			casinobot.sendMessage(src, "You got 2 coins.  It is better than nothing.", casinochan);
 			jackpot += 1;
 			return;
@@ -216,7 +216,7 @@ module.exports = (function () {
         });
     };
     this.showmyCoins = function (src) {
-        var myCoins = casino.coins[src];
+        var myCoins = casino.coins[sys.name(src).toLowerCase()];
         casinobot.sendMessage(src, "You have " + myCoins + " coins right now.", casinochan);
         return;
     };
