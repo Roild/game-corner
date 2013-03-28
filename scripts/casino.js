@@ -217,7 +217,7 @@ module.exports = (function () {
     this.showGames = function (src, commandData) {
         var games = [
             "Chuck-a-luck - Choose any number that 3 dice can make.  If the dice come up with your number you win.",
-            "Craps - Roll the dice if you get 7 or 11 get 5 times your bet. Role a 4,5,6,8,9,10 then you roll another pair of dice and if they number match you get double your bet. Role 2 or 12 and you lose.",
+            "Craps - Roll the dice if you get 7 or 11 get 5 times your bet. Roll a 4,5,6,8,9,10 then you roll another pair of dice and if they number match you get double your bet. Roll 2 or 12 and you lose.",
             "Slots - Press your luck with this game.  You better hope your lucky number comes up."
         ];
         
