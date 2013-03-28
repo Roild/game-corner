@@ -4,9 +4,6 @@
 (function () {
     var cards = require('cards.js');
     
-    cards.generators.cardHolder = function () {};
-    cards.Deck.createType('cardHolder', 'cardHolder');
-    
     cards.useArc4 = true; // change this if it lags too much
     cards.raiseLimit = 50; // limit for raising
     cards.bigBlind = 5; // price of the big blind
@@ -98,7 +95,7 @@ module.exports = function (casino) {
                 }
                 
                 send(src, "Your cards:");
-                send(src, self.deck[0].unicodeString() + " | " + self.deck[1].unicodeString());
+                send(src, self.deck.cards[0].unicodeString() + " | " + self.deck.cards[1].unicodeString());
             }
         },
         mod: {
@@ -168,7 +165,7 @@ module.exports = function (casino) {
             signups: [],
             ips: [],
             deck: new cards.PokerDeck(),
-            communityCards: new cards.cardHolder(),
+            communityCards: new cards.Deck(),
             nextState: function () {},
             ticks: 0,
             round: 1,
@@ -184,7 +181,7 @@ module.exports = function (casino) {
             player;
         
         game.deck = new cards.PokerDeck();
-        game.communityCards = new cards.cardHolder();
+        game.communityCards = new cards.Deck();
         game.bet = cards.bigBlind;
         game.currentPlayer = 0;
         ++game.round;
@@ -193,7 +190,7 @@ module.exports = function (casino) {
             if (game.players.hasOwnProperty(i)) {
                 player = game.players[i];
                 
-                player.deck = new cards.cardHolder();
+                player.deck = new cards.Deck();
                 player.turn = false;
                 player.bigBlind = false;
                 player.smallBlind = false;
@@ -219,7 +216,7 @@ module.exports = function (casino) {
         game.signups.forEach(function (player) {
             game.players[player.toLowerCase()] = {
                 name: player,
-                deck: new cards.cardHolder(),
+                deck: new cards.Deck(),
                 turn: false,
                 bigBlind: false,
                 smallBlind: false
@@ -273,7 +270,7 @@ module.exports = function (casino) {
                 if (sys.id(player.name) !== undefined) {
                     send(sys.id(player.name), "You currently have " + casino.coins[player.name.toLowerCase()] + " coins.");
                     send(sys.id(player.name), "Your cards [type /cards to see them again]:");
-                    send(sys.id(player.name), player.deck[0].unicodeString() + " | " + player.deck[1].unicodeString());
+                    send(sys.id(player.name), player.deck.cards[0].unicodeString() + " | " + player.deck.cards[1].unicodeString());
                 }
             }
         }
@@ -286,6 +283,7 @@ module.exports = function (casino) {
         playerSet(0, 'turn', true);
         
         broadcast("");
+        broadcast("State: Pre-Flop");
         broadcast("It's " + playerGet(0).name + "'s turn.");
         broadcast("");
         
@@ -297,6 +295,7 @@ module.exports = function (casino) {
         playerSet(0, 'turn', true);
         
         broadcast("");
+        broadcast("State: Flop");
         broadcast("It's " + playerGet(0).name + "'s turn.");
         broadcast("");
         
@@ -308,6 +307,7 @@ module.exports = function (casino) {
         playerSet(0, 'turn', true);
         
         broadcast("");
+        broadcast("State: Turn");
         broadcast("It's " + playerGet(0).name + "'s turn.");
         broadcast("");
         
@@ -319,6 +319,7 @@ module.exports = function (casino) {
         playerSet(0, 'turn', true);
         
         broadcast("");
+        broadcast("State: River");
         broadcast("It's " + playerGet(0).name + "'s turn.");
         broadcast("");
         
