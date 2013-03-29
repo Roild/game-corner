@@ -99,7 +99,7 @@ module.exports = (new function () {
             casinobot.sendMessage(src, "You rolled a " + caldice + " and matched your number!! You get " + payout + " coins!", casinochan);
             casino.coins[sys.name(src).toLowerCase()] += payout;
             if (payout >= 400) {
-                casinobot.sendAll(sys.name(src) + " just got a huge payout of " + payout + " coins!!!!");
+                casinobot.sendAll(sys.name(src) + " just got a huge payout of " + payout + " coins!!!!", casinochan);
             }
             return;
         } else {
@@ -177,7 +177,7 @@ module.exports = (new function () {
 		if (slot === 1) {
 			casino.coins[sys.name(src).toLowerCase()] += jackpot;
 			casinobot.sendMessage(src, "You hit the jackpot!!!  You got " + jackpot + " coins!", casinochan);
-			casinobot.sendAll(sys.name(src) + " just hit the jackpot and got " + jackpot + " coins in #casino!!!!!");
+			casinobot.sendAll(sys.name(src) + " just hit the jackpot and got " + jackpot + " coins in #Casino!!!!!", 0);
 			jackpot = 1000;
 			return;
 		}
@@ -244,7 +244,7 @@ module.exports = (new function () {
             nores = false;
         
         if (data.length !== 2 || choices.length !== 3) {
-            casinobot.sendMessage(src, "You play it like this: /pr bet:type1-type2-type3");
+            casinobot.sendMessage(src, "You play it like this: /pr bet:type1-type2-type3", casinochan);
             return;
         }
         
@@ -269,17 +269,17 @@ module.exports = (new function () {
         
         casinobot.sendMessage(src, "Your choices: " + choices.map(function (choice) {
             return casino.prNames[parseInt(choice, 10) - 1] || "error";
-        }).join(" | "));
+        }).join(" | "), casinochan);
         casinobot.sendMessage(src, "Pikachu's choices: " + aiChoices.map(function (choice) {
             return casino.prNames[choice - 1];
-        }).join(" | "));
+        }).join(" | "), casinochan);
         
         choices.forEach(function (choice, index, choices) {
             var result;
             if (isNaN(parseInt(choice, 10)) || casino.prNames[parseInt(choice, 10) - 1] === undefined) {
                 nores = true;
-                casinobot.sendMessage(src, "Choice " + (index + 1) + " is not valid (all choices are numbers and separated with -). Choices are:");
-                return casinobot.sendMessage(src, "Electric [1] | Fire [2] | Water [3] | Grass [4] | Psychic [5] | Ground [6]");
+                casinobot.sendMessage(src, "Choice " + (index + 1) + " is not valid (all choices are numbers and separated with -). Choices are:", casinochan);
+                return casinobot.sendMessage(src, "Electric [1] | Fire [2] | Water [3] | Grass [4] | Psychic [5] | Ground [6]", casinochan);
             }
             
             result = casino.prTable[aiChoices[index]][parseInt(choice, 10)];
@@ -302,12 +302,12 @@ module.exports = (new function () {
         }
         
         if (stats[0] > 1) {
-            casinobot.sendMessage(src, "You won! Enjoy " + (Math.floor(data[0] * 1.7)) + " coins!");
+            casinobot.sendMessage(src, "You won! Enjoy " + (Math.floor(data[0] * 1.7)) + " coins!", casinochan);
             casino.coins[name] += Math.floor(data[0] * 1.7);
         } else if (stats[1] > 1) {
-            casinobot.sendMessage(src, "You tied! Try again.");
+            casinobot.sendMessage(src, "You tied! Try again.", casinochan);
         } else {
-            casinobot.sendMessage(src, "You lost! There goes " + data[0] + " coins. :(");
+            casinobot.sendMessage(src, "You lost! There goes " + data[0] + " coins. :(", casinochan);
             casino.coins[name] -= data[0];
         }
     };
@@ -410,7 +410,7 @@ module.exports = (new function () {
         if (casino.poker.handleCommand(src, message, channel) === true) {
             return true;
         }
-        if (['cal', 'craps', 'slots'].indexOf(command) !== -1) {
+        if (['cal', 'craps', 'slots', 'pr'].indexOf(command) !== -1) {
             if (cooldowns[src]) {
                 casinobot.sendMessage(src, "Don't be so eager to lose all your coins!", casinochan);
                 return;
