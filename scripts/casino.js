@@ -240,7 +240,8 @@ module.exports = (new function () {
             aiChoices,
             name = sys.name(src).toLowerCase(),
             result = 1,
-            stats = [0, 0, 0];
+            stats = [0, 0, 0],
+            nores = false;
         
         if (data.length !== 2 || choices.length !== 3) {
             casinobot.sendMessage(src, "You play it like this: /pr bet:type1-type2-type3");
@@ -275,7 +276,8 @@ module.exports = (new function () {
         
         choices.forEach(function (choice, index, choices) {
             var result;
-            if (isNaN(parseInt(choice, 10))) {
+            if (isNaN(parseInt(choice, 10)) || casino.prNames[parseInt(choice, 10) - 1] === undefined) {
+                nores = true;
                 casinobot.sendMessage(src, "Choice " + (index + 1) + " is not valid (all choices are numbers and separated with -). Choices are:");
                 return casinobot.sendMessage(src, "Electric [1] | Fire [2] | Water [3] | Grass [4] | Psychic [5] | Ground [6]");
             }
@@ -294,6 +296,10 @@ module.exports = (new function () {
                 break;
             }
         });
+        
+        if (nores) {
+            return;
+        }
         
         if (stats[0] > 1) {
             casinobot.sendMessage(src, "You won! Enjoy " + (Math.floor(data[0] * 1.7)) + " coins!");
