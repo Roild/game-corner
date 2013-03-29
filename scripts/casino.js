@@ -226,7 +226,6 @@ module.exports = (new function () {
         [0, 0, 2, 1, 2, 1]
     ];
     
-    
     // Electric [1] Fire [2] Water [3] Grass [4] Psychic [5] Ground [6]
     this.prNames = ["Electric", "Fire", "Water", "Grass", "Psychic", "Ground"];
     
@@ -301,14 +300,14 @@ module.exports = (new function () {
             return;
         }
         
-        if (stats[0] > 1) {
+        if (stats[0] > stats[2]) {
             casinobot.sendMessage(src, "You won! Enjoy " + (Math.floor(data[0] * 1.7)) + " coins!", casinochan);
             casino.coins[name] += Math.floor(data[0] * 1.7);
-        } else if (stats[1] > 1) {
-            casinobot.sendMessage(src, "You tied! Try again.", casinochan);
-        } else {
+        } else if (stats[2] > stats[0]) {
             casinobot.sendMessage(src, "You lost! There goes " + data[0] + " coins. :(", casinochan);
             casino.coins[name] -= data[0];
+        } else {
+            casinobot.sendMessage(src, "You tied! Try again.", casinochan);
         }
     };
     this.showGames = function (src, commandData) {
