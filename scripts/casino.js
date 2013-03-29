@@ -235,7 +235,7 @@ module.exports = (new function () {
     // 1: tie
     // 2: lose
     this.playPR = function (src, commandData) {
-        var data = commandData.split(":"),
+        var data = (commandData || "").split(":"),
             choices = (data[1] || "").split("-"),
             aiChoices,
             name = sys.name(src).toLowerCase(),
@@ -260,7 +260,7 @@ module.exports = (new function () {
 			casinobot.sendMessage(src, "Specify a valid amount of coins.", casinochan);
 			return;
 		}
-        if (commandData > casino.coins[name]) {
+        if (data[0] > casino.coins[name]) {
 			casinobot.sendMessage(src, "You don't have that many coins!", casinochan);
 			return;
 		}
@@ -282,7 +282,7 @@ module.exports = (new function () {
                 return casinobot.sendMessage(src, "Electric [1] | Fire [2] | Water [3] | Grass [4] | Psychic [5] | Ground [6]", casinochan);
             }
             
-            result = casino.prTable[aiChoices[index]][parseInt(choice, 10)];
+            result = casino.prTable[aiChoices[index] - 1][parseInt(choice, 10)];
             
             switch (result) {
             case 0:
