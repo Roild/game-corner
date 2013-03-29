@@ -415,7 +415,7 @@ module.exports = (new function () {
         if (['cal', 'craps', 'slots', 'pr'].indexOf(command) !== -1) {
             if (cooldowns[src]) {
                 casinobot.sendMessage(src, "Don't be so eager to lose all your coins!", casinochan);
-                return;
+                return true;
             }
             cooldowns[src] = true;
             sys.setTimer(function () {
