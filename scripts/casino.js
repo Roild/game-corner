@@ -48,7 +48,7 @@ module.exports = (new function () {
 		}
         
         if (isNaN(global.coins[sys.name(src).toLowerCase()])) {
-            global.coins[sys.name(src).toLowerCase()] = 1;
+            global.coins[sys.name(src).toLowerCase()] = 100;
         }
 		if (commandData === undefined) {
 			return;
@@ -68,7 +68,7 @@ module.exports = (new function () {
 			return;
         }
         if (bet > 100) {
-            casinobot.sendMessage(src, "The max bet is 99 coins.", casinochan);
+            casinobot.sendMessage(src, "The max bet is 100 coins.", casinochan);
             return;
         }
         if (calnumber >= 19) {
@@ -84,19 +84,19 @@ module.exports = (new function () {
         if (caldice === calnumber) {
             if (calnumber === 3 || calnumber === 18) {
                 payout = bet * 8;
-            } else if (calnumber === 4 || calnumber === 17) {
+            } if (calnumber === 4 || calnumber === 17) {
                 payout = bet * 7;
-            } else if (calnumber === 5 || calnumber === 16) {
+            } if (calnumber === 5 || calnumber === 16) {
                 payout = bet * 6;
-            } else if (calnumber === 6 || calnumber === 15) {
+            } if (calnumber === 6 || calnumber === 15) {
                 payout = bet * 5;
-            } else if (calnumber === 7 || calnumber === 14) {
+            } if (calnumber === 7 || calnumber === 14) {
                 payout = bet * 4;
-            } else if (calnumber === 8 || calnumber === 13) {
+            } if (calnumber === 8 || calnumber === 13) {
                 payout = bet * 3;
-            } else if (calnumber === 9 || calnumber === 12) {
+            } if (calnumber === 9 || calnumber === 12) {
                 payout = bet * 2;
-            } else if (calnumber === 10 || calnumber === 11) {
+            } if (calnumber === 10 || calnumber === 11) {
                 payout = bet;
             }
             
@@ -123,7 +123,7 @@ module.exports = (new function () {
         }
         
         if (isNaN(global.coins[sys.name(src).toLowerCase()])) {
-            global.coins[sys.name(src).toLowerCase()] = 1;
+            global.coins[sys.name(src).toLowerCase()] = 100;
         }
         if (commandData === undefined) {
             return;
@@ -142,7 +142,7 @@ module.exports = (new function () {
             return;
         }
         if (bet > 100) {
-            casinobot.sendMessage(src, "The max bet is 99 coins.", casinochan);
+            casinobot.sendMessage(src, "The max bet is 100 coins.", casinochan);
             return;
         }
         dice1 = Math.floor((Math.random() * 6) + 1);
@@ -150,7 +150,7 @@ module.exports = (new function () {
         global.coins[sys.name(src).toLowerCase()] -= bet;
         crapsdice = dice1 + dice2;
         if (crapsdice === 7 || crapsdice === 11) {
-            payout = bet * 2.5;
+            payout = Math.floor(bet * 2.5);
             casinobot.sendMessage(src, "You rolled a " + crapsdice + " and got " + payout + " coins!", casinochan);
             global.coins[sys.name(src).toLowerCase()] += payout;
             return;
@@ -159,7 +159,7 @@ module.exports = (new function () {
                 extra2 = Math.floor((Math.random() * 6) + 1),
                 extra = extra1 + extra2;
             if (crapsdice === extra) {
-                payout = bet * 1.75;
+                payout = Math.floor(bet * 1.75);
                 casinobot.sendMessage(src, "You rolled a " + crapsdice + " and a " + extra + " and got " + payout + " coins!", casinochan);
                 global.coins[sys.name(src).toLowerCase()] += payout;
                 return;
@@ -178,7 +178,7 @@ module.exports = (new function () {
             global.coins[sys.name(src).toLowerCase()] = 100;
         }
         if (isNaN(global.coins[sys.name(src).toLowerCase()])) {
-            global.coins[sys.name(src).toLowerCase()] = 1;
+            global.coins[sys.name(src).toLowerCase()] = 100;
         }
 		global.coins[sys.name(src).toLowerCase()] -= 1;
 		slot = Math.floor((Math.random() * 300) + 1);
@@ -394,6 +394,7 @@ module.exports = (new function () {
             "/pr [bet]:[choice1-choice2-choice3]: To play Pikachu's Roulette.",
             "/help: To learn how to play the games.",
             "/games: To see all the games you are able to play.",
+            "/jackpot: To see what the current jackpot is.",
             "/mycoins: To find out how many coins you have."
 		];
         
