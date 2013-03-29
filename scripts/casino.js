@@ -263,14 +263,17 @@ module.exports = (new function () {
 			casinobot.sendMessage(src, "You don't have that many coins!", casinochan);
 			return;
 		}
+        if (choices[0] === choices[1] || choices[0] === choices[2] || choices[1] === choices[2]) {
+            return casinobot.sendMessage(src, "All types must be different (so you can't do Electric [1] twice, for example).", casinochan);
+        }
         
         aiChoices = [sys.rand(1, 7), sys.rand(1, 7), sys.rand(1, 7)];
         
         casinobot.sendMessage(src, "Your choices: " + choices.map(function (choice) {
-            return casino.prNames[parseInt(choice, 10) - 1] || "error";
+            return casino.prNames[parseInt(choice, 10) - 1] || "Unknown";
         }).join(" | "), casinochan);
         casinobot.sendMessage(src, "Pikachu's choices: " + aiChoices.map(function (choice) {
-            return casino.prNames[choice - 1];
+            return casino.prNames[choice - 1] || "ERR";
         }).join(" | "), casinochan);
         
         choices.forEach(function (choice, index, choices) {
