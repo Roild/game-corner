@@ -267,10 +267,10 @@ module.exports = (new function () {
         aiChoices = [sys.rand(1, 7), sys.rand(1, 7), sys.rand(1, 7)];
         
         casinobot.sendMessage(src, "Your choices: " + choices.map(function (choice) {
-            return this.prNames[parseInt(choice, 10) - 1] || "error";
+            return casino.prNames[parseInt(choice, 10) - 1] || "error";
         }).join(" | "));
         casinobot.sendMessage(src, "Pikachu's choices: " + aiChoices.map(function (choice) {
-            return this.prNames[choice - 1];
+            return casino.prNames[choice - 1];
         }).join(" | "));
         
         choices.forEach(function (choice, index, choices) {
@@ -280,7 +280,7 @@ module.exports = (new function () {
                 return casinobot.sendMessage(src, "Electric [1] | Fire [2] | Water [3] | Grass [4] | Psychic [5] | Ground [6]");
             }
             
-            result = this.prTable[aiChoices[index]][parseInt(choice, 10)];
+            result = casino.prTable[aiChoices[index]][parseInt(choice, 10)];
             
             switch (result) {
             case 0:
