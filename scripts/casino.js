@@ -19,9 +19,9 @@ module.exports = (new function () {
         global = SESSION.global();
     
     //this.memoryHash = new MemoryHash('casino-data.json');
-    if (!global.coins) {
+    //if (!global.coins) {
         global.coins = {};//JSON.parse((casino.memoryHash.get('coins') || "{}"));
-    }
+    //}
     this.chan = undefined;
     
     try {
@@ -118,7 +118,7 @@ module.exports = (new function () {
             crapsdice,
             payout;
         
-        if (global.coins.hasOwnProperty(src) === undefined) {
+        if (global.coins.hasOwnProperty(src)) {
             global.coins[sys.name(src).toLowerCase()] = 100;
         }
         
