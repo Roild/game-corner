@@ -275,7 +275,7 @@ module.exports = (new function () {
         
         choices.forEach(function (choice, index, choices) {
             var result;
-            if (!isNaN(parseInt(choice, 10))) {
+            if (isNaN(parseInt(choice, 10))) {
                 casinobot.sendMessage(src, "Choice " + (index + 1) + " is not valid (all choices are numbers and separated with -). Choices are:");
                 return casinobot.sendMessage(src, "Electric [1] | Fire [2] | Water [3] | Grass [4] | Psychic [5] | Ground [6]");
             }
