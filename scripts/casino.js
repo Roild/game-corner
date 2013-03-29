@@ -46,6 +46,10 @@ module.exports = (new function () {
 		if (casino.coins[sys.name(src).toLowerCase()] === undefined) {
 			casino.coins[sys.name(src).toLowerCase()] = 100;
 		}
+        
+        if (isNaN(casino.coins[sys.name(src).toLowerCase()])) {
+            casino.coins[sys.name(src).toLowerCase()] = 1;
+        }
 		if (commandData === undefined) {
 			return;
 		}
@@ -117,6 +121,10 @@ module.exports = (new function () {
         if (casino.coins.hasOwnProperty(src) === undefined) {
             casino.coins[sys.name(src).toLowerCase()] = 100;
         }
+        
+        if (isNaN(casino.coins[sys.name(src).toLowerCase()])) {
+            casino.coins[sys.name(src).toLowerCase()] = 1;
+        }
         if (commandData === undefined) {
             return;
         }
@@ -169,9 +177,9 @@ module.exports = (new function () {
 		if (!casino.coins.hasOwnProperty(src)) {
             casino.coins[sys.name(src).toLowerCase()] = 100;
         }
-		if (casino.coins[sys.name(src).toLowerCase()] <= 0) {
-			casino.coins[sys.name(src).toLowerCase()] = 1;
-		}
+        if (isNaN(casino.coins[sys.name(src).toLowerCase()])) {
+            casino.coins[sys.name(src).toLowerCase()] = 1;
+        }
 		casino.coins[sys.name(src).toLowerCase()] -= 1;
 		slot = Math.floor((Math.random() * 300) + 1);
 		if (slot === 1) {
@@ -251,6 +259,9 @@ module.exports = (new function () {
 		if (!casino.coins.hasOwnProperty(name)) {
             casino.coins[name] = 100;
         }
+        if (isNaN(casino.coins[name])) {
+            casino.coins[name] = 1;
+        }
 		if (casino.coins[name] <= 0) {
 			casinobot.sendMessage(src, "You don't have any coins so you are not able to play.", casinochan);
 			return;
@@ -327,6 +338,10 @@ module.exports = (new function () {
     };
     this.showmyCoins = function (src) {
         var myCoins = casino.coins[sys.name(src).toLowerCase()];
+        
+        if (isNaN(myCoins)) {
+            myCoins = 100;
+        }
         casinobot.sendMessage(src, "You have " + myCoins + " coins right now.", casinochan);
         return;
     };
