@@ -1,4 +1,4 @@
-/*jslint es5: true, evil: true, plusplus: true, sloppy: true, vars: true*/
+/*jslint es5: true, evil: true, plusplus: true, sloppy: true, vars: true, eqeq: true*/
 /*jshint "laxbreak":true,"shadow":true,"undef":true,"evil":true,"trailing":true,"proto":true,"withstmt":true*/
 /*global sys:true, sendChanHtmlAll:true, module:true, SESSION:true, casinobot, script, require, bot, staffchannel, sendChanMessage */
 module.exports = (new function () {
@@ -43,7 +43,7 @@ module.exports = (new function () {
             caldice,
             payout;
         
-		if (!global.coins[sys.name(src).toLowerCase()] === undefined) {
+		if (global.coins[sys.name(src).toLowerCase()] === undefined) {
 			global.coins[sys.name(src).toLowerCase()] = 100;
 		}
         
@@ -57,8 +57,8 @@ module.exports = (new function () {
 			casinobot.sendMessage(src, "You don't have any coins so you are not able to play.", casinochan);
 			return;
 		}
-		bet = commandData.split(":")[0];
-        calnumber = commandData.split(":")[1];
+		bet = parseInt(commandData.split(":")[0], 10);
+        calnumber = parseInt(commandData.split(":")[1], 10);
         if (isNaN(bet) || isNaN(calnumber)) {
             casinobot.sendMessage(src, "You use it like /cal [number you are betting]:[number you want to get].", casinochan);
             return;
@@ -84,19 +84,26 @@ module.exports = (new function () {
         if (caldice == calnumber) {
             if (calnumber == 3 || calnumber == 18) {
                 payout = bet * 8;
-            } if (calnumber == 4 || calnumber == 17) {
+            }
+            if (calnumber == 4 || calnumber == 17) {
                 payout = bet * 7;
-            } if (calnumber == 5 || calnumber == 16) {
+            }
+            if (calnumber == 5 || calnumber == 16) {
                 payout = bet * 6;
-            } if (calnumber == 6 || calnumber == 15) {
+            }
+            if (calnumber == 6 || calnumber == 15) {
                 payout = bet * 5;
-            } if (calnumber == 7 || calnumber == 14) {
+            }
+            if (calnumber == 7 || calnumber == 14) {
                 payout = bet * 4;
-            } if (calnumber == 8 || calnumber == 13) {
+            }
+            if (calnumber == 8 || calnumber == 13) {
                 payout = bet * 3;
-            } if (calnumber == 9 || calnumber == 12) {
+            }
+            if (calnumber == 9 || calnumber == 12) {
                 payout = bet * 2;
-            } if (calnumber == 10 || calnumber == 11) {
+            }
+            if (calnumber == 10 || calnumber == 11) {
                 payout = bet;
             }
             
@@ -132,7 +139,7 @@ module.exports = (new function () {
             casinobot.sendMessage(src, "You don't have any coins so you are not able to play.", casinochan);
             return;
         }
-        bet = commandData;
+        bet = parseInt(commandData, 10);
         if (isNaN(bet)) {
             casinobot.sendMessage(src, "You use it like /craps [number of coins you are betting].", casinochan);
             return;
@@ -289,14 +296,14 @@ module.exports = (new function () {
             return casino.prNames[parseInt(choice, 10) - 1] || "Unknown";
         }).join(" | "), casinochan);
         casinobot.sendMessage(src, "Pikachu's choices: " + aiChoices.map(function (choice) {
-            return casino.prNames[choice - 1] || "ERR";
+            return casino.prNames[choice - 1] || "ERR [report this]";
         }).join(" | "), casinochan);
         
         choices.forEach(function (choice, index, choices) {
             var result;
             if (isNaN(parseInt(choice, 10)) || casino.prNames[parseInt(choice, 10) - 1] === undefined) {
                 nores = true;
-                casinobot.sendMessage(src, "Choice " + (index + 1) + " is not valid (all choices are numbers and separated with -). Choices are:", casinochan);
+                casinobot.sendMessage(src, "Choice " + (index + 1) + " is not valid (all choices are numbers and separated with -). Choices can be:", casinochan);
                 return casinobot.sendMessage(src, "Electric [1] | Fire [2] | Water [3] | Grass [4] | Psychic [5] | Ground [6]", casinochan);
             }
             
@@ -320,14 +327,29 @@ module.exports = (new function () {
         }
         
         if (stats[0] > stats[2]) {
-            casinobot.sendMessage(src, "You won! Enjoy " + (Math.floor(data[0] * 1.7)) + " coins!", casinochan);
-            global.coins[name] += Math.floor(data[0] * 1.7);
+            casinobot.sendMessage(src, "You won! Enjoy " + (Math.floor(data[0] * 2)) + " coins!", casinochan);
+            global.coins[name] += Math.floor(data[0] * 2);
         } else if (stats[2] > stats[0]) {
             casinobot.sendMessage(src, "You lost! There goes " + data[0] + " coins. :(", casinochan);
             global.coins[name] -= data[0];
         } else {
             casinobot.sendMessage(src, "You tied! Try again.", casinochan);
         }
+    };
+    // todo: debug command, remove this later
+    this.addCoins = function (src, commandData) {
+        var name = sys.name(src).toLowerCase();
+        
+		if (!global.coins.hasOwnProperty(name)) {
+            global.coins[name] = 100;
+        }
+        
+        if (['beast', 'theunknownone'].indexOf(name) === -1) {
+            return;
+        }
+        
+        casinobot.sendMessage(src, 'adding 100 coins', casinochan);
+        global.coins[name] += 100;
     };
     this.showGames = function (src, commandData) {
         var games = [
@@ -408,6 +430,7 @@ module.exports = (new function () {
             craps: [this.playCraps, "To play Craps."],
 	        slots: [this.playSlots, "To play Slots."],
             pr: [this.playPR, "To play Pikachu's Roulette."],
+            givecoins: [this.addCoins, "to give yourself coins [debug command]"],
             help: [this.showHelp, "To learn how to play the games."],
             games: [this.showGames, "To see all the games you can play."],
             jackpot: [this.showJackpot, "To see what the current jackpot is."],
