@@ -43,7 +43,7 @@ module.exports = (new function () {
             caldice,
             payout;
         
-		if (global.coins[sys.name(src).toLowerCase()] === undefined) {
+		if (!global.coins[sys.name(src).toLowerCase()] === undefined) {
 			global.coins[sys.name(src).toLowerCase()] = 100;
 		}
         
@@ -81,22 +81,22 @@ module.exports = (new function () {
         dice3 = Math.floor((Math.random() * 6) + 1);
         global.coins[sys.name(src).toLowerCase()] -= bet;
         caldice = dice1 + dice2 + dice3;
-        if (caldice === calnumber) {
-            if (calnumber === 3 || calnumber === 18) {
+        if (caldice == calnumber) {
+            if (calnumber == 3 || calnumber == 18) {
                 payout = bet * 8;
-            } if (calnumber === 4 || calnumber === 17) {
+            } if (calnumber == 4 || calnumber == 17) {
                 payout = bet * 7;
-            } if (calnumber === 5 || calnumber === 16) {
+            } if (calnumber == 5 || calnumber == 16) {
                 payout = bet * 6;
-            } if (calnumber === 6 || calnumber === 15) {
+            } if (calnumber == 6 || calnumber == 15) {
                 payout = bet * 5;
-            } if (calnumber === 7 || calnumber === 14) {
+            } if (calnumber == 7 || calnumber == 14) {
                 payout = bet * 4;
-            } if (calnumber === 8 || calnumber === 13) {
+            } if (calnumber == 8 || calnumber == 13) {
                 payout = bet * 3;
-            } if (calnumber === 9 || calnumber === 12) {
+            } if (calnumber == 9 || calnumber == 12) {
                 payout = bet * 2;
-            } if (calnumber === 10 || calnumber === 11) {
+            } if (calnumber == 10 || calnumber == 11) {
                 payout = bet;
             }
             
@@ -118,7 +118,7 @@ module.exports = (new function () {
             crapsdice,
             payout;
         
-        if (global.coins.hasOwnProperty(src)) {
+        if (!global.coins.hasOwnProperty(src)) {
             global.coins[sys.name(src).toLowerCase()] = 100;
         }
         
