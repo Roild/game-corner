@@ -375,7 +375,7 @@ module.exports = (new function () {
             casinobot.sendMessage(src, "To play type /slots. You win depend on how lucky you are.");
             return;
         } else if (commandData === "pr") {
-            casinobot.sendMessage(src, "To play type /pr [bet]:[choice1-choice2-choice3]. See http://gamecorner.info/Thread-Game-Pikachu-s-Roulette for more info.");
+            casinobot.sendMessage(src, "To play type /pr [bet]:[choice1-choice2-choice3]. See http://gamecorner.info/Thread-Game-Pikachu-s-Roulette for more info.", casinochan);
             return;
         } else {
             var help = [
@@ -402,7 +402,8 @@ module.exports = (new function () {
             "/help: To learn how to play the games.",
             "/games: To see all the games you are able to play.",
             "/jackpot: To see what the current jackpot is.",
-            "/mycoins: To find out how many coins you have."
+            "/mycoins: To find out how many coins you have.",
+            ""
 		];
         
         some.forEach(function (msg) {
