@@ -108,7 +108,7 @@ module.exports = (new function () {
             }
             
             casinobot.sendMessage(src, "You rolled a " + caldice + " and matched your number!! You get " + payout + " coins!", casinochan);
-            global.coins[sys.name(src).toLowerCase()] += payout;
+            global.coins[sys.name(src).toLowerCase()] += payout + bet; // give them their bet back
             if (payout >= 400) {
                 casinobot.sendAll(sys.name(src) + " just got a huge payout of " + payout + " coins!!!!", casinochan);
             }
@@ -159,7 +159,7 @@ module.exports = (new function () {
         if (crapsdice === 7 || crapsdice === 11) {
             payout = Math.floor(bet * 2.5);
             casinobot.sendMessage(src, "You rolled a " + crapsdice + " and got " + payout + " coins!", casinochan);
-            global.coins[sys.name(src).toLowerCase()] += payout;
+            global.coins[sys.name(src).toLowerCase()] += payout + bet; // give them their bet back
             return;
         } else if (crapsdice === 4 || crapsdice === 5 || crapsdice === 6 || crapsdice === 8 || crapsdice === 9 || crapsdice === 10) {
             var extra1 = Math.floor((Math.random() * 6) + 1),
@@ -168,7 +168,7 @@ module.exports = (new function () {
             if (crapsdice === extra) {
                 payout = Math.floor(bet * 1.75);
                 casinobot.sendMessage(src, "You rolled a " + crapsdice + " and a " + extra + " and got " + payout + " coins!", casinochan);
-                global.coins[sys.name(src).toLowerCase()] += payout;
+                global.coins[sys.name(src).toLowerCase()] += payout + bet; // give them their bet back
                 return;
             } else {
                 casinobot.sendMessage(src, "Your two rolls of " + crapsdice + " and " + extra + " didn't match so you lost " + bet + " coins.", casinochan);
@@ -336,21 +336,6 @@ module.exports = (new function () {
             casinobot.sendMessage(src, "You tied! Try again.", casinochan);
         }
     };
-    // todo: debug command, remove this later
-    this.addCoins = function (src, commandData) {
-        var name = sys.name(src).toLowerCase();
-        
-		if (!global.coins.hasOwnProperty(name)) {
-            global.coins[name] = 100;
-        }
-        
-        if (['beast', 'theunknownone'].indexOf(name) === -1) {
-            return;
-        }
-        
-        casinobot.sendMessage(src, 'adding 100 coins', casinochan);
-        global.coins[name] += 100;
-    };
     this.showGames = function (src, commandData) {
         var games = [
             "Chuck-a-luck - Choose any number that 3 dice can make.  If the dice come up with your number you win.",
@@ -430,7 +415,6 @@ module.exports = (new function () {
             craps: [this.playCraps, "To play Craps."],
 	        slots: [this.playSlots, "To play Slots."],
             pr: [this.playPR, "To play Pikachu's Roulette."],
-            givecoins: [this.addCoins, "to give yourself coins [debug command]"],
             help: [this.showHelp, "To learn how to play the games."],
             games: [this.showGames, "To see all the games you can play."],
             jackpot: [this.showJackpot, "To see what the current jackpot is."],
