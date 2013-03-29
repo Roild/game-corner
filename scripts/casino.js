@@ -420,7 +420,7 @@ module.exports = (new function () {
             cooldowns[src] = true;
             sys.setTimer(function () {
                 delete cooldowns[src];
-            }, casinoCommandCooldown, false);
+            }, casinoCommandCooldown * 1000, false);
         }
         
         if (casino.casinocommands.user.hasOwnProperty(command)) { //Ricetip: You will need this block to make commands work.
