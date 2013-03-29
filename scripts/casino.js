@@ -244,11 +244,13 @@ module.exports = (new function () {
     this.playPR = function (src, commandData) {
         var data = (commandData || "").split(":"),
             choices = (data[1] || "").split("-"),
-            aiChoices,
+            aiChoices = [],
             name = sys.name(src).toLowerCase(),
             result = 1,
             stats = [0, 0, 0],
-            nores = false;
+            nores = false,
+            possibleChoices = [1, 2, 3, 4, 5, 6],
+            i = 4;
         
         if (data.length !== 2 || choices.length !== 3) {
             casinobot.sendMessage(src, "You play it like this: /pr bet:type1-type2-type3", casinochan);
@@ -278,7 +280,10 @@ module.exports = (new function () {
             return casinobot.sendMessage(src, "All types must be different (so you can't do Electric [1] twice, for example).", casinochan);
         }
         
-        aiChoices = [sys.rand(1, 7), sys.rand(1, 7), sys.rand(1, 7)];
+        while (--i) {
+            aiChoices.push(possibleChoices[Math.floor(Math.random() * choices.length)]);
+            possibleChoices.splice(possibleChoices.indexOf(aiChoices[aiChoices.length - 1]), 1); // get rid of the last push
+        }
         
         casinobot.sendMessage(src, "Your choices: " + choices.map(function (choice) {
             return casino.prNames[parseInt(choice, 10) - 1] || "Unknown";
