@@ -284,7 +284,7 @@ module.exports = (new function () {
                 return casinobot.sendMessage(src, "Electric [1] | Fire [2] | Water [3] | Grass [4] | Psychic [5] | Ground [6]", casinochan);
             }
             
-            result = casino.prTable[aiChoices[index] - 1][parseInt(choice, 10) - 1];
+            result = casino.prTable[parseInt(choice, 10) - 1][aiChoices[index] - 1];
             
             switch (result) {
             case 0:
