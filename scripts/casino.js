@@ -43,7 +43,7 @@ module.exports = (new function () {
             caldice,
             payout;
         
-		if (!isNonNegative(casino.coins[sys.name(src).toLowerCase()]) || casino.coins[sys.name(src).toLowerCase()] <= 0) {
+		if (casino.coins[sys.name(src).toLowerCase()] === undefined) {
 			casino.coins[sys.name(src).toLowerCase()] = 100;
 		}
 		if (commandData === undefined) {
@@ -114,7 +114,7 @@ module.exports = (new function () {
             crapsdice,
             payout;
         
-        if (!casino.coins.hasOwnProperty(src)) {
+        if (casino.coins.hasOwnProperty(src) === undefined) {
             casino.coins[sys.name(src).toLowerCase()] = 100;
         }
         if (commandData === undefined) {
