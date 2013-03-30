@@ -48,7 +48,7 @@ module.exports = (new function () {
 		}
         
         if (isNaN(global.coins[sys.name(src).toLowerCase()])) {
-            global.coins[sys.name(src).toLowerCase()] = 100;
+            global.coins[sys.name(src).toLowerCase()] = 1;
         }
 		if (commandData === undefined) {
 			return;
@@ -130,7 +130,7 @@ module.exports = (new function () {
         }
         
         if (isNaN(global.coins[sys.name(src).toLowerCase()])) {
-            global.coins[sys.name(src).toLowerCase()] = 100;
+            global.coins[sys.name(src).toLowerCase()] = 1;
         }
         if (commandData === undefined) {
             return;
@@ -185,7 +185,7 @@ module.exports = (new function () {
             global.coins[sys.name(src).toLowerCase()] = 100;
         }
         if (isNaN(global.coins[sys.name(src).toLowerCase()])) {
-            global.coins[sys.name(src).toLowerCase()] = 100;
+            global.coins[sys.name(src).toLowerCase()] = 1;
         }
 		global.coins[sys.name(src).toLowerCase()] -= 1;
 		slot = Math.floor((Math.random() * 300) + 1);
