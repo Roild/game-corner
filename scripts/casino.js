@@ -43,9 +43,9 @@ module.exports = (new function () {
             caldice,
             payout;
         
-		if (global.coins[sys.name(src).toLowerCase()] === undefined) {
-			global.coins[sys.name(src).toLowerCase()] = 100;
-		}
+	if (global.coins[sys.name(src).toLowerCase()] === undefined) {
+	    global.coins[sys.name(src).toLowerCase()] = 100;
+	}
         
         if (isNaN(global.coins[sys.name(src).toLowerCase()])) {
             global.coins[sys.name(src).toLowerCase()] = 1;
@@ -108,7 +108,7 @@ module.exports = (new function () {
             }
             
             casinobot.sendMessage(src, "You rolled a " + caldice + " and matched your number!! You get " + payout + " coins!", casinochan);
-            global.coins[sys.name(src).toLowerCase()] += payout + bet; // give them their bet back
+            global.coins[sys.name(src).toLowerCase()] += payout;
             if (payout >= 400) {
                 casinobot.sendAll(sys.name(src) + " just got a huge payout of " + payout + " coins!!!!", casinochan);
             }
@@ -159,7 +159,7 @@ module.exports = (new function () {
         if (crapsdice === 7 || crapsdice === 11) {
             payout = Math.floor(bet * 2.5);
             casinobot.sendMessage(src, "You rolled a " + crapsdice + " and got " + payout + " coins!", casinochan);
-            global.coins[sys.name(src).toLowerCase()] += payout + bet; // give them their bet back
+            global.coins[sys.name(src).toLowerCase()] += payout; 
             return;
         } else if (crapsdice === 4 || crapsdice === 5 || crapsdice === 6 || crapsdice === 8 || crapsdice === 9 || crapsdice === 10) {
             var extra1 = Math.floor((Math.random() * 6) + 1),
@@ -168,7 +168,7 @@ module.exports = (new function () {
             if (crapsdice === extra) {
                 payout = Math.floor(bet * 1.75);
                 casinobot.sendMessage(src, "You rolled a " + crapsdice + " and a " + extra + " and got " + payout + " coins!", casinochan);
-                global.coins[sys.name(src).toLowerCase()] += payout + bet; // give them their bet back
+                global.coins[sys.name(src).toLowerCase()] += payout; 
                 return;
             } else {
                 casinobot.sendMessage(src, "Your two rolls of " + crapsdice + " and " + extra + " didn't match so you lost " + bet + " coins.", casinochan);
