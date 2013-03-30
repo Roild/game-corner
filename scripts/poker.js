@@ -16,7 +16,7 @@ module.exports = function (casino) {
     var cards = require('cards.js'),
         randUtils = require('rand-utils.js');
     
-    var game,
+    var game = {},
         module_scope = this;
     
     var commands = {
@@ -165,7 +165,7 @@ module.exports = function (casino) {
     }
     
     function resetGame() {
-        game = {
+        var newGameObj = {
             players: {},
             signups: [],
             ips: [],
@@ -179,6 +179,8 @@ module.exports = function (casino) {
             currentPlayer: 0,
             state: 'none'
         };
+        
+        game = newGameObj;
     }
     
     function newRound() {

@@ -28,7 +28,7 @@ module.exports = (new function () {
         this.poker = new Poker(casino);
     } catch (e) {
         if (staffchannel) {
-            bot.sendAll("Couldn't load poker: " + e, staffchannel);
+            bot.sendAll("Couldn't load poker: " + e + " on line " + e.lineNumber, staffchannel);
         }
         
         this.poker = {handleCommand: function () {}, step: function () {}};
